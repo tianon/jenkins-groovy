@@ -37,8 +37,8 @@ echo '${arch}/ubuntu' > repo
 
 # we don't have /u/arm64
 if [ '${arch}' != 'arm64' ]; then
-	docker images "\$(< repo)" \
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \
+	docker images "\$(< repo)" \\
+		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
 		| xargs -rtn1 docker push
 fi
 """)

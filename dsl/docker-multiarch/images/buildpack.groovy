@@ -12,7 +12,7 @@ for (arch in arches) {
 		label("docker-${arch}")
 		scm {
 			git {
-				url('https://github.com/docker-library/buildpack-deps.git')
+				remote { url('https://github.com/docker-library/buildpack-deps.git') }
 				clean()
 			}
 		}

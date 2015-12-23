@@ -1,9 +1,9 @@
 def arches = [
 	'arm64',
-	//'armel',
-	//'armhf',
-	//'ppc64le',
-	//'s390x',
+	'armel',
+	'armhf',
+	'ppc64le',
+	's390x',
 ]
 
 for (arch in arches) {

@@ -1,7 +1,7 @@
 def arches = [
 	'arm64',
-	//'armhf',
-	//'ppc64le',
+	'armhf',
+	'ppc64le',
 ]
 
 def dpkgArches = [

@@ -54,7 +54,6 @@ for (arch in arches) {
 
 	matrixJob("docker-${arch}-debian") {
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
 		scm {
 			git {
 				remote {
@@ -71,6 +70,7 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		axes {
+			labelExpression('build-host', "docker-${arch}")
 			text('SUITE', archSuites)
 		}
 		steps {

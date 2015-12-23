@@ -28,6 +28,7 @@ for (arch in arches) {
 			cron('H H * * *')
 			scm('H H/6 * * *')
 		}
+		wrappers { colorizeOutput() }
 		steps {
 			shell("""\
 echo '${dpkgArch}' > arch

@@ -27,6 +27,10 @@ for (arch in arches) {
 prefix='${arch}'
 repo="\$prefix/python"
 
+if [[ "\$prefix" == arm* ]]; then
+	rm -r 3.2 3.3
+fi
+
 sed -i "s!^FROM !FROM \$prefix/!" */{,*/}Dockerfile
 ./update.sh
 

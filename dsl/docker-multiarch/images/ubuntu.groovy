@@ -34,6 +34,7 @@ echo '${dpkgArch}' > arch
 echo '${arch}/ubuntu' > repo
 ./update.sh
 
+# we don't have /u/arm64
 if [ '${arch}' != 'arm64' ]; then
 	docker images "\$(< repo)" \
 		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \

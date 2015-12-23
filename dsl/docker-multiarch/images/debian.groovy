@@ -71,7 +71,7 @@ for (arch in arches) {
 		wrappers { colorizeOutput() }
 		axes {
 			labelExpression('build-host', "docker-${arch}")
-			text('SUITE', archSuites)
+			text('suite', archSuites)
 		}
 		steps {
 			shell("""\
@@ -83,7 +83,7 @@ echo '${arch}/debian' > repo
 ln -sf ~/docker/docker/contrib/mkimage.sh
 
 maxTries=3
-while ! ./update.sh "\$SUITE"; do
+while ! ./update.sh "\$suite"; do
 	echo "Update failed; remaining tries: \$(( maxTries - 1 ))"
 	if ! (( --maxTries )); then
 		(( exitCode++ )) || true
@@ -95,8 +95,8 @@ done
 
 # we don't have /u/arm64
 if [ '${arch}' != 'arm64' ]; then
-	docker push "\$(< repo):\$SUITE"
-	if [ "\$(< latest)" = "\$SUITE" ]; then
+	docker push "\$(< repo):\$suite"
+	if [ "\$(< latest)" = "\$suite" ]; then
 		docker push "\$(< repo):latest"
 	fi
 fi

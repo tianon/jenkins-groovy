@@ -25,7 +25,7 @@ for (arch in arches) {
 		steps {
 			shell("""\
 prefix='${arch}'
-repo='${arch}/buildpack-deps'
+repo="\$prefix/buildpack-deps"
 
 sed -i "s!^FROM !FROM \$prefix/!" Dockerfile.template*
 ./update.sh

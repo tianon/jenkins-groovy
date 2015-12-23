@@ -73,6 +73,7 @@ for (arch in arches) {
 			labelExpression('build-host', "docker-${arch}")
 			text('suite', archSuites)
 		}
+		runSequentially() // we can only "docker push" one at a time :(
 		steps {
 			shell("""\
 sudo rm -rf */rootfs/

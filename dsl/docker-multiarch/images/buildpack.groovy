@@ -6,22 +6,23 @@ def arches = [
 	//'s390x',
 ]
 
-freeStyleJob("docker-${arch}-debian") {
-	logRotator { daysToKeep(30) }
-	label("docker-${arch}")
-	scm {
-		git {
-			url('https://github.com/docker-library/buildpack-deps.git')
-			clean()
+for (arch in arches) {
+	freeStyleJob("docker-${arch}-debian") {
+		logRotator { daysToKeep(30) }
+		label("docker-${arch}")
+		scm {
+			git {
+				url('https://github.com/docker-library/buildpack-deps.git')
+				clean()
+			}
 		}
-	}
-	triggers {
-		upstream("docker-${arch}-debian, docker-${arch}-ubuntu", 'UNSTABLE')
-		scm('H H/6 * * *')
-	}
-	wrappers { colorizeOutput() }
-	steps {
-		shell("""\
+		triggers {
+			upstream("docker-${arch}-debian, docker-${arch}-ubuntu", 'UNSTABLE')
+			scm('H H/6 * * *')
+		}
+		wrappers { colorizeOutput() }
+		steps {
+			shell("""\
 prefix='${arch}'
 repo='${arch}/buildpack-deps'
 
@@ -64,5 +65,6 @@ docker images "\$repo" \\
 
 exit "\$failed"
 """)
+		}
 	}
 }

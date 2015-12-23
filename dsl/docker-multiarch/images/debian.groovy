@@ -93,9 +93,12 @@ while ! ./update.sh "\$SUITE"; do
 	sleep 1
 done
 
-docker push "\$(< repo):\$SUITE"
-if [ "\$(< latest)" = "\$SUITE" ]; then
-	docker push "\$(< repo):latest"
+# we don't have /u/arm64
+if [ '${arch}' != 'arm64' ]; then
+	docker push "\$(< repo):\$SUITE"
+	if [ "\$(< latest)" = "\$SUITE" ]; then
+		docker push "\$(< repo):latest"
+	fi
 fi
 """)
 		}

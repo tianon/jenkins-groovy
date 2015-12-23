@@ -7,7 +7,7 @@ def arches = [
 ]
 
 for (arch in arches) {
-	freeStyleJob("docker-${arch}-debian") {
+	freeStyleJob("docker-${arch}-buildpack") {
 		logRotator { daysToKeep(30) }
 		label("docker-${arch}")
 		scm {

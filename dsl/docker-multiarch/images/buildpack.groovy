@@ -13,6 +13,7 @@ for (arch in arches) {
 		scm {
 			git {
 				remote { url('https://github.com/docker-library/buildpack-deps.git') }
+				branches('*/master')
 				clean()
 			}
 		}

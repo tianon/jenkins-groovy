@@ -17,7 +17,7 @@ for (arch in arches) {
 		scm {
 			git {
 				remote {
-					github('tianon/docker-brew-ubuntu-core')
+					url('https://github.com/tianon/docker-brew-ubuntu-core.git')
 					name('origin')
 					refspec('+refs/heads/master:refs/remotes/origin/master')
 				}

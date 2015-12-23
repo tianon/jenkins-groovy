@@ -10,26 +10,32 @@ def dpkgArches = [
 	'ppc64le': 'ppc64el',
 ]
 
-// TODO poll these off https://github.com/tianon/docker-brew-debian ?
+// TODO worth polling any of this info off the mirrors directly?
 def suites = [
-	'jessie',
-	'oldstable',
-	'sid',
-	'squeeze',
-	'stable',
-	'stretch',
-	'testing',
-	'unstable',
-	'wheezy',
-]
-
-// TODO poll these off the mirror directly?
-def unsupportedSuites = [
-	'armhf': [ 'squeeze' ],
-	'armel': [],
-	'arm64': [],
-	'ppc64le': [],
-	's390x': [],
+	'sid': [
+		'alias': 'unstable',
+	],
+	'stretch': [
+		'alias': 'testing',
+	],
+	'jessie': [
+		'alias': 'stable',
+	],
+	'wheezy': [
+		'alias': 'oldstable',
+		'unsupported': [
+			'arm64',
+			'ppc64le',
+		],
+	],
+	'squeeze': [
+		'unsupported': [
+			'arm64',
+			'armhf',
+			'ppc64le',
+			's390x',
+		],
+	],
 ]
 
 for (arch in arches) {
@@ -37,8 +43,12 @@ for (arch in arches) {
 
 	archSuites = []
 	for (suite in suites) {
-		if (!unsupportedSuites[arch].contains(suite)) {
-			archSuites << suite
+		if (suite.value.containsKey('unsupported') && suite.value['unsupported'].contains(arch)) {
+			continue
+		}
+		archSuites << suite.key
+		if (suite.value.containsKey('alias')) {
+			archSuites << suite.value.alias
 		}
 	}
 

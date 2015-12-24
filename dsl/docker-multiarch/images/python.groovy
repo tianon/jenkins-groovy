@@ -40,7 +40,7 @@ for v in */; do
 	docker build -t "\$repo:\$v" "\$v"
 	docker build -t "\$repo:\$v-onbuild" "\$v/onbuild"
 	docker build -t "\$repo:\$v-slim" "\$v/slim"
-	if [ "\$v" = 'latest' ]; then
+	if [ "\$v" = "\$latest" ]; then
 		docker tag -f "\$repo:\$v" "\$repo"
 		docker tag -f "\$repo:\$v-onbuild" "\$repo:onbuild"
 		docker tag -f "\$repo:\$v-slim" "\$repo:slim"

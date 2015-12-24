@@ -36,7 +36,7 @@ for v in */; do
 	docker tag -f "\$repo:\$v" "\$repo:\$v-cli"
 	docker build -t "\$repo:\$v-apache" "\$v/apache"
 	docker build -t "\$repo:\$v-fpm" "\$v/fpm"
-	if [ "\$v" = 'latest' ]; then
+	if [ "\$v" = "\$latest" ]; then
 		docker tag -f "\$repo:\$v" "\$repo"
 		docker tag -f "\$repo:\$v-cli" "\$repo:cli"
 		docker tag -f "\$repo:\$v-apache" "\$repo:apache"

@@ -49,7 +49,7 @@ for v in */; do
 		docker build -t "\$repo:\$v-curl" "\$v/curl" \\
 		&& docker build -t "\$repo:\$v-scm" "\$v/scm" \\
 		&& docker build -t "\$repo:\$v" "\$v"; then
-		if [ "\$v" = 'latest' ]; then
+		if [ "\$v" = "\$latest" ]; then
 			docker tag -f "\$repo:\$v-curl" "\$repo:curl"
 			docker tag -f "\$repo:\$v-scm" "\$repo:scm"
 			docker tag -f "\$repo:\$v" "\$repo"

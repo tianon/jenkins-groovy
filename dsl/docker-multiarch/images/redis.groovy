@@ -3,7 +3,7 @@ def arches = [
 	'armel',
 	'armhf',
 	'ppc64le',
-	's390x',
+	//'s390x', // TODO gosu for s390x?
 ]
 
 for (arch in arches) {

@@ -31,8 +31,11 @@ for (arch in arches) {
 		wrappers { colorizeOutput() }
 		steps {
 			shell("""\
-echo '${dpkgArch}' > arch
-echo '${arch}/ubuntu' > repo
+prefix='${arch}'
+dpkgArch='${dpkgArch}'
+
+echo "\$dpkgArch" > arch
+echo "\$prefix/ubuntu" > repo
 ./update.sh
 
 # we don't have /u/arm64

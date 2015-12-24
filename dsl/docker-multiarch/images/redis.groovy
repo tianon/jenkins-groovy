@@ -32,10 +32,8 @@ rm -r */32bit # explicit 32bit images don't make sense outside amd64
 sed -i "s!^FROM !FROM \$prefix/!" */Dockerfile
 
 # TODO remove me; https://github.com/docker-library/redis/pull/38
-if [ "\$prefix" = 'ppc64le' ]; then
-	# no support for wheezy on ppc64le
-	sed -i 's!wheezy!jessie!g' */Dockerfile
-fi
+# no support for wheezy on several arches
+sed -i 's!wheezy!jessie!g' */Dockerfile
 
 latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')"
 

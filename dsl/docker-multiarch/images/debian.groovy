@@ -95,7 +95,7 @@ while ! ./update.sh "\$suite"; do
 done
 
 # we don't have /u/arm64
-if [ '${arch}' != 'arm64' ]; then
+if [ "\$prefix" != 'arm64' ]; then
 	docker push "\$(< repo):\$suite"
 	if [ "\$(< latest)" = "\$suite" ]; then
 		docker push "\$(< repo):latest"

@@ -27,7 +27,6 @@ prefix='${arch}'
 repo="\$prefix/php"
 
 sed -i "s!^FROM !FROM \$prefix/!" */{,*/}Dockerfile
-./update.sh
 
 latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')"
 

@@ -15,12 +15,14 @@ freeStyleJob('tianon-crank') {
 	steps {
 		shell("""\
 find eg -name '*.hy' -exec sed -i '
-	s!:key.*!:key "0xFDE0F4FE36B4F0C7"!;
+	s!:key.*!:key "0x46599F27072CBD26"!;
 	s!:maintainer-name.*!:maintainer-name "Tianon Gravi (Launchpad)"!;
 	s!:maintainer-email.*!:maintainer-email "admwiggin+launchpad@gmail.com"!;
 ' '{}' +
 docker build -t paultag/crank .
+docker rm -f crank || true
 docker run -i --rm \\
+	--name crank \\
 	-v "\$HOME/debian/launchpad.asc":/crank/key.asc:ro \\
 	paultag/crank eg/gb.hy
 """)

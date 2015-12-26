@@ -24,7 +24,7 @@ docker rm -f crank || true
 docker run -i --rm \\
 	--name crank \\
 	-v "\$HOME/debian/launchpad.asc":/crank/key.asc:ro \\
-	paultag/crank eg/gb.hy
+	paultag/crank eg/hy.hy
 """)
 	}
 }

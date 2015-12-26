@@ -29,6 +29,10 @@ repo="\$prefix/gcc"
 
 sed -i "s!^FROM !FROM \$prefix/!" */Dockerfile
 
+# explicitly set the gcc arch tuple to the arch of gcc from the build environment
+# (this makes sure our armhf build on arm64 hardware builds an armhf gcc)
+sed -i 's!/configure !/configure --build="\$(gcc -print-multiarch)" !g' */Dockerfile
+
 for v in */; do
 	v="\${v%/}"
 	from="\$(awk '\$1 == "FROM" { print \$2; exit }' "\$v/Dockerfile")"

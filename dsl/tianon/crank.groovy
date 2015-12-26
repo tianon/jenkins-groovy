@@ -19,7 +19,7 @@ find eg -name '*.hy' -exec sed -i '
 	s!:maintainer-name.*!:maintainer-name "Tianon Gravi (Launchpad)"!;
 	s!:maintainer-email.*!:maintainer-email "admwiggin+launchpad@gmail.com"!;
 ' '{}' +
-docker build -t paultag/crank .
+docker build --pull -t paultag/crank .
 docker rm -f crank || true
 docker run -i --rm \\
 	--name crank \\

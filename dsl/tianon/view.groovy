@@ -17,4 +17,4 @@ def myView(viewFunc, viewName, viewRegex) {
 	}
 }
 
-myView(delegate.&listView, 'tianon', 'tianon-.*')
+myView(this.&listView, 'tianon', 'tianon-.*')

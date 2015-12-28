@@ -9,6 +9,7 @@ freeStyleJob('tianon-crank') {
 		}
 	}
 	triggers {
+		cron('H H/6 * * *')
 		scm('H * * * *')
 	}
 	wrappers { colorizeOutput() }

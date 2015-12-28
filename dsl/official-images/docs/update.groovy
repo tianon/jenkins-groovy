@@ -25,10 +25,9 @@ freeStyleJob('official-images-docs-update') {
 	steps {
 		shell("""\
 ./update.sh
-git commit -m 'Run update.sh' -- \\
-		*/README.md \\
-		hello-world/content.md \\
-	|| true
+git add */README.md || true
+git add hello-world/content.md || true
+git commit -m 'Run update.sh' || true
 """)
 	}
 	publishers {

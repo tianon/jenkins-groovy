@@ -26,7 +26,7 @@ freeStyleJob('official-images-docs-update') {
 		shell("""\
 ./update.sh
 git commit -m 'Run update.sh' -- \\
-		'*/README.md' \\
+		*/README.md \\
 		hello-world/content.md \\
 	|| true
 """)

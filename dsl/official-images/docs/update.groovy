@@ -1,5 +1,4 @@
 freeStyleJob('official-images-docs-update') {
-	disabled()
 	logRotator { numToKeep(5) }
 	label('infosiftr')
 	scm {

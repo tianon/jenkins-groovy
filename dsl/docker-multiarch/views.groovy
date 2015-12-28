@@ -48,6 +48,7 @@ nestedView('docker-multiarch') {
 		weather()
 	}
 	views {
+		myView(delegate.&listView, '-all', 'docker-.*')
 		nestedView('arches') {
 			filterBuildQueue()
 			filterExecutors()

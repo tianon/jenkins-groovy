@@ -6,11 +6,12 @@ def arches = [
 	//'s390x',
 ]
 
-def helloWorldC = ["/bin/bash", "-c", """\
-docker pull hello-world >&2 \\
-	&& docker run --rm hello-world \\
-		| sed 's/"/\\\\&/g; s/^/\\t"/g; s/\$/\\\\n"/g'
-"""].execute().text
+def proc = ["/bin/bash", "-c", """\
+docker run --rm hello-world \\
+	| sed 's/"/\\\\&/g; s/^/\\t"/g; s/\$/\\\\n"/g'
+"""].execute()
+println(proc.err)
+def helloWorldC = proc.text
 helloWorldC = """\
 #include <stdio.h>
 

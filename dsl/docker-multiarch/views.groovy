@@ -12,6 +12,7 @@ def images = [
 	'debian',
 	'gcc',
 	'node',
+	'perl',
 	'php',
 	'python',
 	'redis',

@@ -30,8 +30,7 @@ repo="\$prefix/perl"
 sed -i "s!^FROM !FROM \$prefix/!" */Dockerfile
 
 # see https://sources.debian.net/src/perl/jessie/debian/config.debian/
-sed -i 's! -Duse64bitall!!' */Dockerfile
-sed -i "s!Configure !Configure -Duse64bitint -Darchname=\$prefix-linux !" */Dockerfile
+sed -i "s!Configure !Configure -Darchname=\$prefix-linux !" */Dockerfile
 
 case "\$prefix" in
 	ppc64le|s390x)

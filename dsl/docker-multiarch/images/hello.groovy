@@ -6,11 +6,15 @@ def arches = [
 	//'s390x',
 ]
 
-def helloWorldC = """\
+def proc = new ProcessBuilder("/bin/bash", "-c", """\
 docker pull hello-world >&2 \\
 	&& docker run --rm hello-world \\
 		| sed 's/"/\\\\&/g; s/^/\\t"/g; s/\$/\\\\n"/g'
-""".execute().text
+""").start()
+def helloWorldC = []
+proc.inputStream.eachLine { helloWorldC << it }
+proc.waitFor();
+helloWorldC = helloWorldC.join("\n");
 helloWorldC = """\
 #include <stdio.h>
 

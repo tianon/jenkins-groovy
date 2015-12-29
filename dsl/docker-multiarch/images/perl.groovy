@@ -49,8 +49,8 @@ for f in */; do
 	minor="\${minor%%.*}" # "022"
 	patch="\${f#\$major.\$minor.}"
 	patch="\${patch%%-*}" # "001"
-	while [ "\$minor" != "\${minor%0}" ]; do minor="\${minor%0}"; done # "22"
-	while [ "\$patch" != "\${patch%0}" ]; do patch="\${patch%0}"; done # "1"
+	while [ "\$minor" != "\${minor#0}" ]; do minor="\${minor#0}"; done # "22"
+	while [ "\$patch" != "\${patch#0}" ]; do patch="\${patch#0}"; done # "1"
 	if [ "\$major" -lt 5 ]; then continue; fi
 	if [ "\$minor" -lt 20 ]; then continue; fi
 	v="\$major.\$minor.\$patch\$suff"

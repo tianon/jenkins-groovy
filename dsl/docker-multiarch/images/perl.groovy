@@ -43,7 +43,7 @@ for f in */; do
 	patch="\${f#\$major.\$minor.}"
 	patch="\${patch%%-*}" # "001"
 	minor="\${minor//0/}" # "22"
-	patch="\${minor//0/}" # "1"
+	patch="\${patch//0/}" # "1"
 	v="\$major.\$minor.\$patch\${var:+-\$var}"
 	docker build -t "\$repo:\$v" "\$f"
 	if [ "\$f" = "\$latest" ]; then

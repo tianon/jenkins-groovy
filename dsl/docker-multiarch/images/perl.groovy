@@ -28,11 +28,14 @@ prefix='${arch}'
 repo="\$prefix/perl"
 
 sed -i "s!^FROM !FROM \$prefix/!" */Dockerfile
-sed -i 's! -Duse64bitall!!g' */Dockerfile
+
+# see https://sources.debian.net/src/perl/jessie/debian/config.debian/
+sed -i 's! -Duse64bitall!!' */Dockerfile
+sed -i "s!Configure !Configure -Duse64bitint -Darchname=\$prefix-linux !" */Dockerfile
 
 case "\$prefix" in
 	ppc64le|s390x)
-		sed -i '/make test_harness/d' */Dockerfile
+		#sed -i '/make test_harness/d' */Dockerfile
 		;;
 esac
 

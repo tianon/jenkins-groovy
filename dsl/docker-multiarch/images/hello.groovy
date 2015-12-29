@@ -35,7 +35,7 @@ helloWorldC="\$(awk '
 	\$1 == "message:" { yay = 1; next }
 	\$1 == "length:" { yay = 0; next }
 	yay {
-		gsub(/^.*db /, "");
+		gsub(/^.*db /, "\\t");
 		gsub(/\\"/, "\\\\\\"");
 		gsub(/0x0A/, "\\"\\\\n\\"");
 		gsub(/, /, " ");

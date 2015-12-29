@@ -50,6 +50,9 @@ cat > .template-helpers/generate-dockerfile-links-partial.sh <<-'EOF'
 	echo 'If you are curious about specifically how this image differs, see [the Jenkins Groovy DSL scripts in the `tianon/jenkins-groovy` GitHub repository](https://github.com/tianon/jenkins-groovy/tree/master/dsl/docker-multiarch/images), which are responsible for creating the Jenkins jobs which build them.'
 	echo
 EOF
+cat > .template-helpers/user-feedback.md <<-'EOF'
+	If you have issues with or suggestions for this image, please file them as issues on the [`tianon/jenkins-groovy` GitHub repository](https://github.com/tianon/jenkins-groovy/issues).
+EOF
 sed -ri "s!^docker pull !#&!; s!^(docker run --rm|docker images) !\\1 \$prefix/!" hello-world/update.sh
 ./update.sh \\
 	${images.join(" \\\n\t")}

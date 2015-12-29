@@ -7,10 +7,10 @@ def arches = [
 ]
 
 def images = [
-	//'busybox',
-	//'debian',
+	'busybox',
+	'debian',
 	'hello-world',
-	//'ubuntu',
+	'ubuntu',
 ]
 
 for (arch in arches) {

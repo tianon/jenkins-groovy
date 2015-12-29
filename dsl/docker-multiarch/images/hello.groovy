@@ -6,20 +6,6 @@ def arches = [
 	//'s390x',
 ]
 
-def helloWorldC = "/usr/bin/docker run --rm hello-world".execute().text.replaceAll('"', '\\"').tokenize("\n").collect { "\t\"" + it + "\\\n\"" }.join("\n")
-helloWorldC = """\
-#include <stdio.h>
-
-const char *msg =
-${helloWorldC};
-
-int main() {
-	printf("%s", msg);
-	
-	return 0;
-}
-"""
-
 for (arch in arches) {
 	freeStyleJob("docker-${arch}-hello") {
 		logRotator { daysToKeep(30) }
@@ -43,9 +29,32 @@ repo="\$prefix/hello-world"
 
 sed -i "s!^FROM !FROM \$prefix/!; s/nasm/gcc/" Dockerfile.build
 sed -i 's/nasm/gcc -static -Os/g; s/\\.asm/\\.c/g' Makefile
-cat > hello.c <<'EOHWC'
-${helloWorldC}
+
+# convert hello.asm message contents to C
+helloWorldC="\$(awk '
+	\$1 == "message:" { yay = 1; next }
+	\$1 == "length:" { yay = 0; next }
+	yay {
+		gsub(/^.*db /, "");
+		gsub(/\\"/, "\\\\\\"");
+		gsub(/0x0A/, "\\"\\\\n\\"");
+		gsub(/, /, " ");
+		gsub(/'"'"'/, "\\"");
+		print;
+	}
+' hello.asm)"
+cat > hello.c <<EOHWC
+#include <stdio.h>
+
+const char *msg =
+\$helloWorldC;
+
+int main() {
+	printf("%s", msg);
+	return 0;
+}
 EOHWC
+
 ./update.sh
 
 docker build -t "\$repo" .

@@ -19,7 +19,7 @@ freeStyleJob('official-images-docs-update') {
 		}
 	}
 	triggers {
-		cron('H/30 * * * *')
+		cron('H/15 * * * *')
 	}
 	wrappers { colorizeOutput() }
 	steps {

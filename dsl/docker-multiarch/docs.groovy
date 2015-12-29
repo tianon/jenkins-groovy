@@ -7,9 +7,15 @@ def arches = [
 ]
 
 def images = [
+	'buildpack-deps',
 	'busybox',
 	'debian',
+	'gcc',
 	'hello-world',
+	'perl',
+	'php',
+	'python',
+	'redis',
 	'ubuntu',
 ]
 

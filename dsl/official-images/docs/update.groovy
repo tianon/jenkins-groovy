@@ -6,7 +6,7 @@ freeStyleJob('official-images-docs-update') {
 			remote {
 				url('git@github.com:docker-library/docs.git')
 				credentials('docker-library-bot')
-				name('')
+				name('origin')
 			}
 			branches('*/master')
 			clean()
@@ -19,7 +19,7 @@ freeStyleJob('official-images-docs-update') {
 		}
 	}
 	triggers {
-		cron('H/15 * * * *')
+		cron('H/30 * * * *')
 	}
 	wrappers { colorizeOutput() }
 	steps {

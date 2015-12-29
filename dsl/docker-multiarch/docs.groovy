@@ -50,7 +50,9 @@ cat > .template-helpers/generate-dockerfile-links-partial.sh <<-'EOF'
 	echo 'If you are curious about specifically how these images are built, see [the Jenkins Groovy DSL scripts in the `tianon/jenkins-groovy` GitHub repository](https://github.com/tianon/jenkins-groovy/tree/master/dsl/docker-multiarch/images).'
 	echo
 EOF
-./update.sh
+sed -i 's!^docker pull !#&!" */update.sh
+./update.sh \\
+	${images.join(" \\\n\t")}
 
 docker build --pull -t docker-library-docs .
 test -t 1 && it='-it' || it='-i'

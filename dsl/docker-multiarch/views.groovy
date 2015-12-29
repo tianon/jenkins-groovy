@@ -11,6 +11,7 @@ def images = [
 	'busybox',
 	'debian',
 	'gcc',
+	'hello',
 	'node',
 	'perl',
 	'php',

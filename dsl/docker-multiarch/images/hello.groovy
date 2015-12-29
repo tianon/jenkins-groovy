@@ -10,7 +10,7 @@ def proc = ["/bin/bash", "-c", """\
 docker run --rm hello-world \\
 	| sed 's/"/\\\\&/g; s/^/\\t"/g; s/\$/\\\\n"/g'
 """].execute()
-println(proc.err)
+println(proc.err.text)
 def helloWorldC = proc.text
 helloWorldC = """\
 #include <stdio.h>

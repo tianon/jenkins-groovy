@@ -76,11 +76,14 @@ for (arch in arches) {
 		runSequentially() // we can only "docker push" one at a time :(
 		steps {
 			shell("""\
+prefix='${arch}'
+dpkgArch='${dpkgArch}'
+
 sudo rm -rf */rootfs/
 git clean -dfx
 
-echo '${dpkgArch}' > arch
-echo '${arch}/debian' > repo
+echo "\$dpkgArch" > arch
+echo "\$prefix/debian" > repo
 ln -sf ~/docker/docker/contrib/mkimage.sh
 
 maxTries=3

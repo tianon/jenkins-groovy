@@ -43,6 +43,7 @@ for f in */; do
 	f="\${f%/}"
 	var="\${f##*,}" # "threaded"
 	[ "\$f" != "\$var" ] || var=
+	suff="\${var:+-\$var}"
 	major="\${f%%.*}" # "5"
 	minor="\${f#\$major.}"
 	minor="\${minor%%.*}" # "022"
@@ -50,11 +51,16 @@ for f in */; do
 	patch="\${patch%%-*}" # "001"
 	minor="\${minor//0/}" # "22"
 	patch="\${patch//0/}" # "1"
-	v="\$major.\$minor.\$patch\${var:+-\$var}"
+	if [ "\$major" -lt 5 ]; then continue; fi
+	if [ "\$minor" -lt 20 ]; then continue; fi
+	v="\$major.\$minor.\$patch\$suff"
 	docker build -t "\$repo:\$v" "\$f"
+	docker tag -f "\$repo:\$v" "\$repo:\$major.\$minor\$suff"
 	if [ "\$f" = "\$latest" ]; then
+		docker tag -f "\$repo:\$v" "\$repo:\$major"
 		docker tag -f "\$repo:\$v" "\$repo"
-	elif [ "\$var" -a "\$f" = "\$latest-\$var" ]; then
+	elif [ "\$var" -a "\$f" = "\$latest,\$var" ]; then
+		docker tag -f "\$repo:\$v" "\$repo:\$major\$suff"
 		docker tag -f "\$repo:\$v" "\$repo:\$var"
 	fi
 done

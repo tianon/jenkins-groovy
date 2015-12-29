@@ -1,9 +1,9 @@
 def arches = [
-	//'arm64',
-	//'armel',
+	'arm64',
+	'armel',
 	'armhf',
-	//'ppc64le',
-	//'s390x',
+	'ppc64le',
+	's390x',
 ]
 
 def images = [

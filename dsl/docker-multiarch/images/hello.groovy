@@ -59,6 +59,8 @@ EOHWC
 
 docker build -t "\$repo" .
 
+docker run --rm "\$repo"
+
 # we don't have /u/arm64
 if [ "\$prefix" != 'arm64' ]; then
 	docker images "\$repo" \\

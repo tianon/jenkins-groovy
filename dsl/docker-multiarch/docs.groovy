@@ -54,7 +54,7 @@ sed -ri "s!^docker pull !#&!; s!^(docker run --rm|docker images) !\\1 \$prefix/!
 ./update.sh \\
 	${images.join(" \\\n\t")}
 
-docker build --pull -t docker-library-docs .
+docker build -t docker-library-docs .
 test -t 1 && it='-it' || it='-i'
 set +x
 docker run "\$it" --rm -e TERM \\

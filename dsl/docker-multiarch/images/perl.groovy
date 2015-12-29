@@ -30,6 +30,12 @@ repo="\$prefix/perl"
 sed -i "s!^FROM !FROM \$prefix/!" */Dockerfile
 sed -i 's! -Duse64bitall!!g' */Dockerfile
 
+case "\$prefix" in
+	ppc64le|s390x)
+		sed -i '/make test_harness/d' */Dockerfile
+		;;
+esac
+
 #latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')" # TODO calculate "latest" somehow
 latest='5.022.001-64bit'
 

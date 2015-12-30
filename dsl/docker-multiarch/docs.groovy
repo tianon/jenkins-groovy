@@ -20,6 +20,7 @@ def images = [
 	'perl',
 	'php',
 	'python',
+	'r-base',
 	'rakudo-star',
 	'redis',
 	'ruby',

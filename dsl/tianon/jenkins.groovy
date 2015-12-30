@@ -21,7 +21,7 @@ freeStyleJob('tianon-jenkins') {
 cd jenkins
 ./update.sh
 docker build --pull -t tianon/jenkins .
-jenkinsVersion="$(awk '
+jenkinsVersion="\$(awk '
 	\$1 == "ENV" && \$2 == "JENKINS_VERSION" {
 		print \$3;
 	}

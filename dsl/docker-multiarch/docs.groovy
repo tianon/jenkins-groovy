@@ -16,6 +16,7 @@ def images = [
 	'haproxy',
 	'hello-world',
 	'irssi',
+	'memcached',
 	'perl',
 	'php',
 	'python',

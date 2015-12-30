@@ -53,6 +53,9 @@ esac
 
 optionsFiles=( versions/library-*/options )
 
+# remove "-s" from the BUILD_OPTIONS (we'll specify that explicitly)
+sed -i 's! -s !!g' "\${optionsFiles[@]}"
+
 for options in "\${optionsFiles[@]}"; do
 	(
 		source "\$options"
@@ -98,9 +101,7 @@ for options in "\${optionsFiles[@]}"; do
 		
 		chmod +x mkimage-alpine.bash
 		sudo PATH="\$PATH" \
-			./mkimage-alpine.bash \\
-				"\${BUILD_OPTIONS[@]}" \\
-				-s > rootfs.tar.gz
+			./mkimage-alpine.bash "\${BUILD_OPTIONS[@]}"
 		for tag in "\${TAGS[@]}"; do
 			[[ "\$tag" == "\$repo":* ]]
 			docker build -t "\$prefix/\$tag" .

@@ -19,6 +19,7 @@ def images = [
 	'perl',
 	'php',
 	'python',
+	'rakudo',
 	'redis',
 	'ruby',
 	'ubuntu',

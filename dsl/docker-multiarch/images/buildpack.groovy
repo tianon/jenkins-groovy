@@ -8,6 +8,7 @@ def arches = [
 
 for (arch in arches) {
 	freeStyleJob("docker-${arch}-buildpack") {
+		description("""<a href="https://hub.docker.com/r/${arch}/buildpack-deps/" target="_blank">Docker Hub page (<code>${arch}/buildpack-deps</code>)</a>""")
 		logRotator { daysToKeep(30) }
 		label("docker-${arch}")
 		scm {

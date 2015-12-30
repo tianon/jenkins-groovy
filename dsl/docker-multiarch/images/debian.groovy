@@ -45,6 +45,7 @@ for (arch in arches) {
 	}
 
 	matrixJob("docker-${arch}-debian") {
+		description("""<a href="https://hub.docker.com/r/${arch}/debian/" target="_blank">Docker Hub page (<code>${arch}/debian</code>)</a>""")
 		logRotator { daysToKeep(30) }
 		scm {
 			git {

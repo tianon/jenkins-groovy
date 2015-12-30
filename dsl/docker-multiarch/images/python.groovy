@@ -8,6 +8,7 @@ def arches = [
 
 for (arch in arches) {
 	freeStyleJob("docker-${arch}-python") {
+		description("""<a href="https://hub.docker.com/r/${arch}/python/" target="_blank">Docker Hub page (<code>${arch}/python</code>)</a>""")
 		logRotator { daysToKeep(30) }
 		label("docker-${arch}")
 		scm {

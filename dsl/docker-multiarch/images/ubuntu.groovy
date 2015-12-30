@@ -12,6 +12,7 @@ for (arch in arches) {
 	dpkgArch = dpkgArches.containsKey(arch) ? dpkgArches[arch] : arch
 
 	freeStyleJob("docker-${arch}-ubuntu") {
+		description("""<a href="https://hub.docker.com/r/${arch}/ubuntu/" target="_blank">Docker Hub page (<code>${arch}/ubuntu</code>)</a>""")
 		logRotator { daysToKeep(30) }
 		label("docker-${arch}")
 		scm {

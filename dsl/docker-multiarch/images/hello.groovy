@@ -30,6 +30,7 @@ repo="\$prefix/hello-world"
 
 sed -i "s!^FROM !FROM \$prefix/!; s/nasm/gcc/" Dockerfile.build
 sed -i 's/nasm/gcc -static -Os/g; s/\\.asm/\\.c/g' Makefile
+sed -i "s/hello-world:build/hello-world:\$prefix-build/g" update.sh
 
 # convert hello.asm message contents to C
 helloWorldC="\$(awk '

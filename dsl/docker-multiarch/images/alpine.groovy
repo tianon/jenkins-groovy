@@ -63,7 +63,7 @@ for options in "\${optionsFiles[@]}"; do
 		get_package() {
 			local pkg="\$1"
 			local ver="\$(awk -F: '\$1 == "P" { pkg = \$2 } pkg == "'"\$pkg"'" && \$1 == "V" { print \$2 }' APKINDEX)"
-			curl -fSL "\$mirror/\$version/main/\$apkArch/\$pkg-\$ver.apk" \
+			curl -fSL "\$MIRROR/\$RELEASE/main/\$apkArch/\$pkg-\$ver.apk" \
 				| tar -xvz
 		}
 		get_package alpine-keys

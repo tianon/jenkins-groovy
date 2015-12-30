@@ -16,6 +16,7 @@ for (arch in arches) {
 	apkArch = apkArches.containsKey(arch) ? apkArches[arch] : arch
 
 	freeStyleJob("docker-${arch}-alpine") {
+		description("""<a href="https://hub.docker.com/r/${arch}/alpine/">Docker Hub page (<code>${arch}/alpine</code>)</a>""")
 		logRotator { daysToKeep(30) }
 		label("docker-${arch}")
 		scm {

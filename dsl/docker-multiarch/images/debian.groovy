@@ -28,14 +28,6 @@ def suites = [
 			'ppc64le',
 		],
 	],
-	'squeeze': [
-		'unsupported': [
-			'arm64',
-			'armhf',
-			'ppc64le',
-			's390x',
-		],
-	],
 ]
 
 for (arch in arches) {

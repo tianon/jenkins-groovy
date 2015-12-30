@@ -13,6 +13,7 @@ def images = [
 	'debian',
 	'gcc',
 	'hello-world',
+	'irssi',
 	'perl',
 	'php',
 	'python',

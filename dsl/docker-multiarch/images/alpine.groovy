@@ -46,6 +46,8 @@ case "\$apkArch" in
 	armhf)
 		# armhf support didn't exist until 3.x
 		rm -r versions/library-2.*
+		# 3.1 was rpi-only
+		rm -r versions/library-3.1
 		;;
 esac
 

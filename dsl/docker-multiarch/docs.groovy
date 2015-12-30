@@ -50,7 +50,7 @@ cat > .template-helpers/generate-dockerfile-links-partial.sh <<-'EOF'
 	#!/bin/bash
 	set -e
 	
-	echo '** THESE IMAGES ARE VERY, VERY EXPERIMENTAL; THEY ARE PROVIDED ON A BEST-EFFORT BASIS WHILE [docker/docker#15866](https://github.com/docker/docker/issues/15866) IS STILL IN-PROGRESS -- PLEASE DO NOT USE THEM FOR ANYTHING SERIOUS OR IMPORTANT **'
+	echo '** THESE IMAGES ARE VERY, VERY EXPERIMENTAL; THEY ARE PROVIDED ON A BEST-EFFORT BASIS WHILE [docker/docker#15866](https://github.com/docker/docker/issues/15866) IS STILL IN-PROGRESS -- PLEASE DO NOT USE THEM FOR ANYTHING SERIOUS OR IMPORTANT ** (aside from the important task of CI for testing Docker itself, which is one of their primary purposes for existence)'
 	echo
 	
 	echo "This image is built from the source of the [official image of the same name (\\`\$1\\`)](https://hub.docker.com/_/\$1/).  Please see that image's description for links to the relevant \\`Dockerfile\\`s."

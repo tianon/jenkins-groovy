@@ -62,11 +62,13 @@ mkdir -p apk-tools
 		curl -fSL "\$mirror/\$version/main/\$apkArch/\$pkg-\$ver.apk" \
 			| tar -xvz
 	}
-	[ -d etc/apk/keys ] || get_package alpine-keys
-	[ -x sbin/apk.static ] || get_package apk-tools-static
-	[ -x sbin/apk ] || ln -sf apk.static sbin/apk
+	get_package alpine-keys
+	get_package apk-tools-static
+	ln -sf apk.static sbin/apk
 )
 export PATH="\$PATH:\$PWD/apk-tools/sbin"
+sed -i "s!/etc/apk/keys!\$PWD/apk-tools/etc/apk/keys!g" builder/scripts/mkimage-alpine.bash
+cat builder/scripts/mkimage-alpine.bash
 exec apk --help
 sudo rm -rf */rootfs/
 git clean -dfx

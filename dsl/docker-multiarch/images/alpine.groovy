@@ -55,12 +55,12 @@ mkdir apk-tools
 (
 	cd apk-tools
 	curl -fSL "\$mirror/\$version/main/\$apkArch/APKINDEX.tar.gz" \
-		| tar -xz
+		| tar -xvz
 	get_package() {
 		local pkg="\$1"
 		local ver="\$(awk -F: '\$1 == "P" { pkg = \$2 } pkg == "'"\$pkg"'" && \$1 == "V" { print \$2 }' APKINDEX)"
 		curl -fSL "\$mirror/\$version/main/\$apkArch/\$pkg-\$ver.apk" \
-			| tar -xz
+			| tar -xvz
 	}
 	get_package alpine-keys
 	get_package apk-tools-static

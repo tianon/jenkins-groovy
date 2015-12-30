@@ -12,18 +12,12 @@ def apkArches = [
 	'i386': 'x86',
 ]
 
-def versions = [
-	'v3.3',
-	'v3.2',
-	'v3.1',
-	// 2.x releases don't support armhf
-]
-
 for (arch in arches) {
 	apkArch = apkArches.containsKey(arch) ? apkArches[arch] : arch
 
-	matrixJob("docker-${arch}-alpine") {
+	freeStyleJob("docker-${arch}-alpine") {
 		logRotator { daysToKeep(30) }
+		label("docker-${arch}")
 		scm {
 			git {
 				remote {
@@ -39,20 +33,20 @@ for (arch in arches) {
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }
-		axes {
-			labelExpression('build-host', "docker-${arch}")
-			text('version', versions)
-		}
-		runSequentially() // we can only "docker push" one at a time :(
 		steps {
 			shell("""\
 prefix='${arch}'
+repo='alpine'
 apkArch='${apkArch}'
 
-mirror='http://dl-4.alpinelinux.org/alpine'
+sudo rm -rf tmp
+git clean -dfx
 
-mkdir -p apk-tools
 (
+	mirror='http://dl-4.alpinelinux.org/alpine'
+	version='v3.3'
+	
+	mkdir apk-tools
 	cd apk-tools
 	curl -fSL "\$mirror/\$version/main/\$apkArch/APKINDEX.tar.gz" \
 		| tar -xvz
@@ -66,34 +60,39 @@ mkdir -p apk-tools
 	get_package apk-tools-static
 	ln -sf apk.static sbin/apk
 )
+
+# put "apk" in the PATH
 export PATH="\$PATH:\$PWD/apk-tools/sbin"
+
+# adjust the script to look for /etc/apk/keys in the correct place
 sed -i "s!/etc/apk/keys!\$PWD/apk-tools/etc/apk/keys!g" builder/scripts/mkimage-alpine.bash
-cat builder/scripts/mkimage-alpine.bash
-exec apk --help
-sudo rm -rf */rootfs/
-git clean -dfx
 
-echo "\$dpkgArch" > arch
-echo "\$prefix/debian" > repo
-ln -sf ~/docker/docker/contrib/mkimage.sh
+# put temporary files in a convenient, known location
+mkdir tmp
+export TMPDIR="\$PWD/tmp"
 
-maxTries=3
-while ! ./update.sh "\$suite"; do
-	echo "Update failed; remaining tries: \$(( maxTries - 1 ))"
-	if ! (( --maxTries )); then
-		(( exitCode++ )) || true
-		echo "Update failed; no tries remain; giving up and moving on"
-		exit 1
-	fi
-	sleep 1
+# this loop is adapted from build()
+# see https://github.com/gliderlabs/docker-alpine/blob/9e700b7cbdddf0b95e3786ff8de7ecea8962826c/build#L3-L33
+for options in versions/library-*/options; do
+	(
+		dir="\$(dirname "\$options")"
+		source "\$options"
+		: "\${TAGS:?}" "\${BUILD_OPTIONS:?}" "\${RELEASE:?}"
+		builder/scripts/mkimage-alpine.bash \\
+			"\${BUILD_OPTIONS[@]}" \\
+			-s > "\$dir/rootfs.tar.gz"
+		for tag in "\${TAGS[@]}"; do
+			[[ "\$tag" == "\$repo":* ]]
+			docker build -t "\$prefix/\$tag" "\$dir"
+		done
+	)
 done
 
 # we don't have /u/arm64
 if [ "\$prefix" != 'arm64' ]; then
-	docker push "\$(< repo):\$suite"
-	if [ "\$(< latest)" = "\$suite" ]; then
-		docker push "\$(< repo):latest"
-	fi
+	docker images "\$prefix/\$repo" \\
+		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
+		| xargs -rtn1 docker push
 fi
 """)
 		}

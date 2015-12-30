@@ -94,6 +94,7 @@ for options in "\${optionsFiles[@]}"; do
 		
 		cd "\$dir"
 		
+		chmod +x mkimage-alpine.bash
 		sudo PATH="\$PATH" \
 			./mkimage-alpine.bash \\
 				"\${BUILD_OPTIONS[@]}" \\

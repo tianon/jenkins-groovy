@@ -42,6 +42,13 @@ apkArch='${apkArch}'
 sudo rm -rf tmp
 git clean -dfx
 
+case "\$apkArch" in
+	armhf)
+		# armhf support didn't exist until 3.x
+		rm -r versions/library-2.*
+		;;
+esac
+
 (
 	mirror='http://dl-4.alpinelinux.org/alpine'
 	version='v3.3'

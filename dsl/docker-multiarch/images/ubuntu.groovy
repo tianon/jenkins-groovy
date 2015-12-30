@@ -1,7 +1,9 @@
 def arches = [
 	'arm64',
+	//'armel', // unsupported; upstream considers the arch effectively dead
 	'armhf',
 	'ppc64le',
+	//'s390x', // unsupported; upstream doesn't consider the arch important
 ]
 
 def dpkgArches = [

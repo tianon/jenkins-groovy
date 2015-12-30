@@ -33,6 +33,9 @@ rm -r R*/ elixir/
 
 sed -i "s!^FROM !FROM \$prefix/!" */{,*/}Dockerfile
 
+# update autoconf config.guess and config.sub so they support our architectures for sure
+sed -i 's!.* autoconf !\\t\\&\\& ( cd erts/autoconf \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD" -o config.guess \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD" -o config.sub ) \\\\\\n&!' */{,*/}Dockerfile
+
 latest='18' # TODO discover this automatically somehow
 
 for v in */; do

@@ -78,9 +78,10 @@ for options in versions/library-*/options; do
 		dir="\$(dirname "\$options")"
 		source "\$options"
 		: "\${TAGS:?}" "\${BUILD_OPTIONS:?}" "\${RELEASE:?}"
-		builder/scripts/mkimage-alpine.bash \\
-			"\${BUILD_OPTIONS[@]}" \\
-			-s > "\$dir/rootfs.tar.gz"
+		sudo PATH="\$PATH" \
+			builder/scripts/mkimage-alpine.bash \\
+				"\${BUILD_OPTIONS[@]}" \\
+				-s > "\$dir/rootfs.tar.gz"
 		for tag in "\${TAGS[@]}"; do
 			[[ "\$tag" == "\$repo":* ]]
 			docker build -t "\$prefix/\$tag" "\$dir"

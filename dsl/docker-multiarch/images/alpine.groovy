@@ -49,30 +49,28 @@ case "\$apkArch" in
 		;;
 esac
 
-(
-	mirror='http://dl-4.alpinelinux.org/alpine'
-	version='v3.3'
-	
-	mkdir apk-tools
-	cd apk-tools
-	curl -fSL "\$mirror/\$version/main/\$apkArch/APKINDEX.tar.gz" \
-		| tar -xvz
-	get_package() {
-		local pkg="\$1"
-		local ver="\$(awk -F: '\$1 == "P" { pkg = \$2 } pkg == "'"\$pkg"'" && \$1 == "V" { print \$2 }' APKINDEX)"
-		curl -fSL "\$mirror/\$version/main/\$apkArch/\$pkg-\$ver.apk" \
+optionsFiles=( versions/library-*/options )
+
+for options in "\${optionsFiles[@]}"; do
+	(
+		source "\$options"
+		: "\${RELEASE:?}" "\${MIRROR:?}"
+		
+		mkdir "apk-tools-\$RELEASE"
+		cd "apk-tools-\$RELEASE"
+		curl -fSL "\$MIRROR/\$RELEASE/main/\$apkArch/APKINDEX.tar.gz" \
 			| tar -xvz
-	}
-	get_package alpine-keys
-	get_package apk-tools-static
-	ln -sf apk.static sbin/apk
-)
-
-# put "apk" in the PATH
-export PATH="\$PATH:\$PWD/apk-tools/sbin"
-
-# adjust the script to look for /etc/apk/keys in the correct place
-sed -i "s!/etc/apk/keys!\$PWD/apk-tools/etc/apk/keys!g" builder/scripts/mkimage-alpine.bash
+		get_package() {
+			local pkg="\$1"
+			local ver="\$(awk -F: '\$1 == "P" { pkg = \$2 } pkg == "'"\$pkg"'" && \$1 == "V" { print \$2 }' APKINDEX)"
+			curl -fSL "\$mirror/\$version/main/\$apkArch/\$pkg-\$ver.apk" \
+				| tar -xvz
+		}
+		get_package alpine-keys
+		get_package apk-tools-static
+		ln -sf apk.static sbin/apk
+	)
+done
 
 # put temporary files in a convenient, known location
 mkdir tmp
@@ -80,18 +78,29 @@ export TMPDIR="\$PWD/tmp"
 
 # this loop is adapted from build()
 # see https://github.com/gliderlabs/docker-alpine/blob/9e700b7cbdddf0b95e3786ff8de7ecea8962826c/build#L3-L33
-for options in versions/library-*/options; do
+for options in "\${optionsFiles[@]}"; do
 	(
 		dir="\$(dirname "\$options")"
+		
 		source "\$options"
 		: "\${TAGS:?}" "\${BUILD_OPTIONS:?}" "\${RELEASE:?}"
+		
+		# put "apk" in the PATH
+		apkTools="\$PWD/apk-tools-\$RELEASE"
+		export PATH="\$PATH:\$apkTools/sbin"
+		
+		# adjust the script to look for /etc/apk/keys in the correct place
+		sed "s!/etc/apk/keys!\$apkTools/etc/apk/keys!g" builder/scripts/mkimage-alpine.bash > "\$dir/mkimage-alpine.bash"
+		
+		cd "\$dir"
+		
 		sudo PATH="\$PATH" \
-			builder/scripts/mkimage-alpine.bash \\
+			./mkimage-alpine.bash \\
 				"\${BUILD_OPTIONS[@]}" \\
-				-s > "\$dir/rootfs.tar.gz"
+				-s > rootfs.tar.gz
 		for tag in "\${TAGS[@]}"; do
 			[[ "\$tag" == "\$repo":* ]]
-			docker build -t "\$prefix/\$tag" "\$dir"
+			docker build -t "\$prefix/\$tag" .
 		done
 	)
 done

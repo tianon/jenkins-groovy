@@ -28,10 +28,8 @@ for (arch in arches) {
 prefix='${arch}'
 repo="\$prefix/ruby"
 
-if [[ "\$prefix" == arm* ]]; then
-	# won't build on arm64 host for some reason
-	rm -r 2.0
-fi
+# Ruby 2.0 sucks and needs to die (also, config.guess is outdated and Ruby 2.0 isn't worth hacking it to a newer version for IMO)
+rm -r 2.0
 
 sed -i "s!^FROM !FROM \$prefix/!" */{,*/}Dockerfile
 

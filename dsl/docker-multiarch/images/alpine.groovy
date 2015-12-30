@@ -54,7 +54,7 @@ esac
 optionsFiles=( versions/library-*/options )
 
 # remove "-s" from the BUILD_OPTIONS (we'll specify that explicitly)
-sed -i 's! -s !!g' "\${optionsFiles[@]}"
+sed -i 's! -s ! !g' "\${optionsFiles[@]}"
 
 for options in "\${optionsFiles[@]}"; do
 	(

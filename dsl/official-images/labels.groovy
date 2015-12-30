@@ -22,7 +22,7 @@ freeStyleJob('official-images-labeler') {
 		shell("""\
 docker build -t docker-library-issue-labeler .
 set +x
-docker run --rm docker-library-issue-labeler go-wrapper run "\$GITHUB_TOKEN"
+docker run --rm docker-library-issue-labeler app "\$GITHUB_TOKEN"
 """)
 	}
 }

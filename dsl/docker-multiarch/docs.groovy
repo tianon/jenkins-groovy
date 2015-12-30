@@ -7,6 +7,7 @@ def arches = [
 ]
 
 def images = [
+	'alpine',
 	'buildpack-deps',
 	'busybox',
 	'debian',

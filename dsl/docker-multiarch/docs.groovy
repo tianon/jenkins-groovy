@@ -21,6 +21,7 @@ def images = [
 	'python',
 	'rakudo-star',
 	'redis',
+	'ruby',
 	'ubuntu',
 ]
 

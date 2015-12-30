@@ -2,7 +2,7 @@ def arches = [
 	//'arm64',
 	'armel',
 	'armhf',
-	'ppc64le',
+	//'ppc64le', // "pypy: error while loading shared libraries: libssl.so.10: cannot open shared object file: No such file or directory"
 	//'s390x',
 ]
 // see https://bitbucket.org/pypy/pypy/downloads for upstream binary downloads

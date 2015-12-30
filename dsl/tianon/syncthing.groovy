@@ -36,16 +36,9 @@ for v in */; do
 			print \$3;
 		}
 	' "\$v/Dockerfile")"
-	case "\$v" in
-		inotify)
-			git commit -m "Update inotify to \$full" -- "\$v/Dockerfile || true
-			;;
-		*)
-			if [ "\$full" ]; then
-				git commit -m "Update to \$full" -- "\$v/Dockerfile" || true
-			fi
-			;;
-	esac
+	if [ "\$full" ]; then
+		git commit -m "Update \$v to \$full" -- "\$v/Dockerfile" || true
+	fi
 done
 """)
 	}

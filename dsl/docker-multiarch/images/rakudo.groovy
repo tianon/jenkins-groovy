@@ -3,7 +3,7 @@ def arches = [
 	'armel',
 	'armhf',
 	'ppc64le',
-	's390x',
+	//'s390x', // not supported by "dyncall"
 ]
 
 for (arch in arches) {

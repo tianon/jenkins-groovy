@@ -11,6 +11,7 @@ def images = [
 	'buildpack-deps',
 	'busybox',
 	'debian',
+	'erlang',
 	'gcc',
 	'hello-world',
 	'irssi',

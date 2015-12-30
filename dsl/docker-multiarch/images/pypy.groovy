@@ -2,7 +2,7 @@ def arches = [
 	//'arm64',
 	'armel',
 	'armhf',
-	//'ppc64le', // 4.0.0 had a ppc64le release, but not 4.0.1 :/
+	'ppc64le',
 	//'s390x',
 ]
 // see https://bitbucket.org/pypy/pypy/downloads for upstream binary downloads
@@ -35,6 +35,13 @@ case "\$prefix" in
 		;;
 	armhf)
 		sed -i 's!linux64!linux-armhf-raring!g' */{,*/}Dockerfile
+		;;
+	ppc64le)
+		sed -i 's!linux64!ppc64le!g' */{,*/}Dockerfile
+		# now for the bizarre...  4.0.0 on bitbucket had ppc64le, but not 4.0.1
+		sed -i 's!https://bitbucket.org/pypy/pypy/downloads/!http://cobra.cs.uni-duesseldorf.de/~buildmaster/mirror/!g' */{,*/}Dockerfile
+		# no pypy3 love for ppc64le (yet?)
+		rm -r 3
 		;;
 	*)
 		echo >&2 "unsupported architecture: \$prefix"

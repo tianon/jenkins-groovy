@@ -51,7 +51,7 @@ apkArch='${apkArch}'
 
 mirror='http://dl-4.alpinelinux.org/alpine'
 
-mkdir apk-tools
+mkdir -p apk-tools
 (
 	cd apk-tools
 	curl -fSL "\$mirror/\$version/main/\$apkArch/APKINDEX.tar.gz" \
@@ -62,8 +62,9 @@ mkdir apk-tools
 		curl -fSL "\$mirror/\$version/main/\$apkArch/\$pkg-\$ver.apk" \
 			| tar -xvz
 	}
-	get_package alpine-keys
-	get_package apk-tools-static
+	[ -d etc/apk/keys ] || get_package alpine-keys
+	[ -x sbin/apk-static ] || get_package apk-tools-static
+	[ -x sbin/apk ] || ln -sf apk-static sbin/apk
 )
 export PATH="\$PATH:\$PWD/apk-tools/sbin"
 exec apk --help

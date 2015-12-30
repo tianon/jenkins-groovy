@@ -1,4 +1,4 @@
-freeStyleJob('tianon-jenkins') {
+freeStyleJob('tianon-syncthing') {
 	logRotator { numToKeep(5) }
 	label('tianon-nameless')
 	scm {

@@ -31,7 +31,7 @@ repo="\$prefix/irssi"
 sed -i "s!^FROM !FROM \$prefix/!" Dockerfile
 
 docker build -t "\$repo" .
-version="\$(awk '\$1 == "ENV" && \$2 == "IRSSI_VERSION" { print \$3; exit }')"
+version="\$(awk '\$1 == "ENV" && \$2 == "IRSSI_VERSION" { print \$3; exit }' Dockerfile)"
 docker tag -f "\$repo" "\$repo:\$version"
 
 # we don't have /u/arm64

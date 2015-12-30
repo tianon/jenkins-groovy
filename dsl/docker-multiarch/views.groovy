@@ -16,7 +16,6 @@ def images = [
 	'haproxy',
 	'hello',
 	'irssi',
-	'mono',
 	'node',
 	'perl',
 	'php',

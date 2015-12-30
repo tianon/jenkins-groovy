@@ -36,7 +36,7 @@ for v in */; do
 	if ! docker inspect "\$from" &> /dev/null; then
 		if [[ "\$from" == *:wheezy ]]; then
 			# some of our arches aren't supported by wheezy, but mono's repo supports them (arm64, ppc64le)
-			sed -i 's/:wheezy$/:jessie/g' "\$v/Dockerfile"
+			sed -i 's/:wheezy\$/:jessie/g' "\$v/Dockerfile"
 		else
 			echo >&2 "warning, '\$from' does not exist; skipping \$v"
 			rm -r "\$v/"

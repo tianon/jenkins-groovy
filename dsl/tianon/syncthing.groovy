@@ -21,13 +21,6 @@ freeStyleJob('tianon-syncthing') {
 ./update.sh
 
 ./build.sh
-./push.sh
-
-docker tag -f tianon/syncthing:cli tianon/syncthing-cli
-docker tag -f tianon/syncthing:inotify tianon/syncthing-inotify
-
-docker push tianon/syncthing-cli
-docker push tianon/syncthing-inotify
 
 for v in */; do
 	v="\${v%/}"
@@ -40,6 +33,14 @@ for v in */; do
 		git commit -m "Update \$v to \$full" -- "\$v/Dockerfile" || true
 	fi
 done
+
+./push.sh
+
+docker tag -f tianon/syncthing:cli tianon/syncthing-cli
+docker tag -f tianon/syncthing:inotify tianon/syncthing-inotify
+
+docker push tianon/syncthing-cli
+docker push tianon/syncthing-inotify
 """)
 	}
 	publishers {

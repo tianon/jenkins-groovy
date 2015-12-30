@@ -20,6 +20,7 @@ def images = [
 	'node',
 	'perl',
 	'php',
+	'pypy',
 	'python',
 	'r',
 	'rakudo',

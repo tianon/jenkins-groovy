@@ -19,6 +19,7 @@ def images = [
 	'memcached',
 	'perl',
 	'php',
+	'pypy',
 	'python',
 	'r-base',
 	'rakudo-star',

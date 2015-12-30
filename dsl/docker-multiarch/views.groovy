@@ -13,6 +13,7 @@ def images = [
 	'debian',
 	'erlang',
 	'gcc',
+	'haproxy',
 	'hello',
 	'irssi',
 	'node',

@@ -30,8 +30,16 @@ repo="\$prefix/perl"
 sed -i "s!^FROM !FROM \$prefix/!" */Dockerfile
 
 # see https://sources.debian.net/src/perl/jessie/debian/config.debian/
-sed -i 's! -Duse64bitall!!' */Dockerfile
-sed -i "s!Configure !Configure -Duse64bitint -Darchname=\$prefix-linux !" */Dockerfile
+case "\$prefix" in
+	armel|armhf)
+		# *** You have chosen a maximally 64-bit build,
+		# *** but your pointers are only 4 bytes wide.
+		# *** Please rerun Configure without -Duse64bitall.
+		# *** Since you have quads, you could possibly try with -Duse64bitint.
+		sed -i 's! -Duse64bitall! -Duse64bitint!' */Dockerfile
+		;;
+esac
+sed -i "s!Configure !Configure -Darchname=\$prefix-linux !" */Dockerfile
 
 #latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')" # TODO calculate "latest" somehow
 latest='5.022.001-64bit'

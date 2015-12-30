@@ -63,8 +63,8 @@ mkdir -p apk-tools
 			| tar -xvz
 	}
 	[ -d etc/apk/keys ] || get_package alpine-keys
-	[ -x sbin/apk-static ] || get_package apk-tools-static
-	[ -x sbin/apk ] || ln -sf apk-static sbin/apk
+	[ -x sbin/apk.static ] || get_package apk-tools-static
+	[ -x sbin/apk ] || ln -sf apk.static sbin/apk
 )
 export PATH="\$PATH:\$PWD/apk-tools/sbin"
 exec apk --help

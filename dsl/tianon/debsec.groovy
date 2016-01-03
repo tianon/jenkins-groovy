@@ -12,7 +12,7 @@ freeStyleJob('tianon-debian-security-mirror') {
 		}
 	}
 	triggers {
-		cron('H * * * *')
+		cron('H/30 * * * *')
 	}
 	wrappers { colorizeOutput() }
 	steps {

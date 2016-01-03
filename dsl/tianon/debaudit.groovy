@@ -5,6 +5,7 @@ def images = [
 		'testing',
 		'stable',
 		'oldstable',
+		'squeeze',
 	],
 	'ubuntu': [
 		'precise',
@@ -24,14 +25,15 @@ images.each { repo, suites ->
 
 matrixJob('tianon-audit-deb-images') {
 	logRotator { daysToKeep(30) }
+	concurrentBuild()
 	triggers {
 		cron('H H/12 * * *')
 	}
-	wrappers { colorizeOutput() }
 	axes {
 		labelExpression('build-host', 'tianon')
 		text('image', imagesAxis)
 	}
+	wrappers { colorizeOutput() }
 	steps {
 		shell("""\
 docker run -i --rm "\$image" sh -ec '

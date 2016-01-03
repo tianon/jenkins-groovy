@@ -1,4 +1,4 @@
-freeStyleJob('tianon-debian-security-tracker-mirror') {
+freeStyleJob('tianon-debian-security-mirror') {
 	logRotator { daysToKeep(30) }
 	label('tianon')
 	scm {
@@ -12,7 +12,7 @@ freeStyleJob('tianon-debian-security-tracker-mirror') {
 		}
 	}
 	triggers {
-		cron('H H * * *')
+		cron('H * * * *')
 	}
 	wrappers { colorizeOutput() }
 	steps {

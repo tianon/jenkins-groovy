@@ -25,7 +25,6 @@ images.each { repo, suites ->
 
 matrixJob('tianon-audit-deb-images') {
 	logRotator { daysToKeep(30) }
-	concurrentBuild()
 	triggers {
 		cron('H H/12 * * *')
 	}

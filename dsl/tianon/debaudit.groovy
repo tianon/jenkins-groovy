@@ -38,7 +38,11 @@ matrixJob('tianon-audit-deb-images') {
 docker run -i --rm "\$image" sh -ec '
 	apt-get update -qq
 	apt-get dist-upgrade -qq -s
-' | -F '[ \\[\\]()]+' '\$1 == "Inst" { print \$2 " -- " \$3 " => " \$4 }'
+' | -F '[ \\[\\]()]+' '
+	\$1 == "Inst" {
+		print \$2 " -- " \$3 " => " \$4
+	}
+'
 """)
 	}
 }

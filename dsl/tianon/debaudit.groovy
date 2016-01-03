@@ -17,8 +17,9 @@ def images = [
 ]
 
 def firehose = [
-	'debian:sid',
-	'ubuntu:xenial',
+	'debian:unstable', 'debian:sid',
+	'debian:testing', 'debian:stretch',
+	'ubuntu:devel', 'ubuntu:xenial',
 ]
 
 def imagesAxis = []

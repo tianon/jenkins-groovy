@@ -35,6 +35,9 @@ matrixJob('tianon-audit-deb-images') {
 	wrappers { colorizeOutput() }
 	steps {
 		shell("""\
+#!/bin/bash
+set -eo pipefail
+
 docker run -i --rm "\$image" sh -ec '
 	apt-get update -qq
 	apt-get dist-upgrade -qq -s

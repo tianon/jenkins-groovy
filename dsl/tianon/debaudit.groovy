@@ -16,6 +16,11 @@ def images = [
 	],
 ]
 
+def firehose = [
+	'debian:sid',
+	'ubuntu:xenial',
+]
+
 def imagesAxis = []
 images.each { repo, suites ->
 	suites.each { suite ->
@@ -51,9 +56,15 @@ docker run -i --rm "\$image" sh -ec '
 
 echo; echo
 
-if [ -s temp ]; then
-	exit 1
-fi
+for s in ${firehose.join(' ')}; do
+	if [ "\$image" = "\$s" ]; then
+		# if the image we're testing is a "firehose" image,
+		# then don't mark updates available as a failing build
+		exit
+	fi
+done
+
+[ ! -s temp ]
 """)
 	}
 }

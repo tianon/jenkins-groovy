@@ -44,6 +44,8 @@ matrixJob('tianon-audit-deb-images') {
 #!/bin/bash
 set -eo pipefail
 
+docker pull "\$image" > /dev/null
+
 echo; echo
 
 docker run -i --rm "\$image" sh -ec '

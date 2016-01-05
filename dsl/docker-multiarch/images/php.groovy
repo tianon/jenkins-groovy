@@ -30,6 +30,13 @@ repo="\$prefix/php"
 
 sed -i "s!^FROM !FROM \$prefix/!" */{,*/}Dockerfile
 
+case "\$prefix" in
+	s390x)
+		# bundled pcre is silly and fails to build on s390x (too old)
+		sed -i 's!buildDeps="!buildDeps="libpcre3-dev !; s!/configure !/configure --with-libdir="lib/\$(gcc -print-multiarch)" --with-pcre-regex=/usr !g' */{,*/}Dockerfile
+		;;
+esac
+
 latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')"
 
 for v in */; do

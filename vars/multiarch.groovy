@@ -74,8 +74,22 @@ def static templateArgs(meta, extra = [], std = ['prefix', 'image', 'repo']) {
 }
 def static templatePush(meta) {
 	return '''
-docker images "$repo" \\
-	| awk -F '  +' 'NR>1 { print $1 ":" $2 }' \\
-	| xargs -rtn1 docker push
+IFS=$'\\n'
+pushImages=( $(docker images "$repo" | awk -F '  +' 'NR>1 { print $1 ":" $2 }') )
+unset IFS
+
+pushFailed=
+for pushImage in "${pushImages[@]}"; do
+	tries=3
+	while ! docker push "$pushImage"; do
+		if ! (( --tries )); then
+			pushFailed=1
+			echo "Push of '$pushImage' failed; no tries remain; giving up and moving on"
+			break
+		fi
+		echo "Push of '$pushImage' failed; remaining tries: $tries"
+	done
+done
+[ -z "$pushFailed" ]
 '''
 }

@@ -1,16 +1,12 @@
-def arches = [
-	'arm64',
-	'armel',
-	'armhf',
-	'ppc64le',
-	's390x',
-]
+import vars.multiarch
 
-for (arch in arches) {
-	freeStyleJob("docker-${arch}-python") {
-		description("""<a href="https://hub.docker.com/r/${arch}/python/" target="_blank">Docker Hub page (<code>${arch}/python</code>)</a>""")
+for (arch in multiarch.allArches()) {
+	meta = multiarch.meta(getClass(), arch)
+
+	freeStyleJob(meta.name) {
+		description(meta.description)
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
+		label(meta.label)
 		scm {
 			git {
 				remote { url('https://github.com/docker-library/python.git') }
@@ -24,37 +20,27 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell("""\
-prefix='${arch}'
-repo="\$prefix/python"
-
-if [[ "\$prefix" == arm* ]]; then
+			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+if [[ "$dpkgArch" == arm* ]]; then
 	rm -r 3.2 3.3
 fi
 
-sed -i "s!^FROM !FROM \$prefix/!" */{,*/}Dockerfile
+sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
-latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')"
+latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 
 for v in */; do
-	v="\${v%/}"
-	docker build -t "\$repo:\$v" "\$v"
-	docker build -t "\$repo:\$v-onbuild" "\$v/onbuild"
-	docker build -t "\$repo:\$v-slim" "\$v/slim"
-	if [ "\$v" = "\$latest" ]; then
-		docker tag -f "\$repo:\$v" "\$repo"
-		docker tag -f "\$repo:\$v-onbuild" "\$repo:onbuild"
-		docker tag -f "\$repo:\$v-slim" "\$repo:slim"
+	v="${v%/}"
+	docker build -t "$repo:$v" "$v"
+	docker build -t "$repo:$v-onbuild" "$v/onbuild"
+	docker build -t "$repo:$v-slim" "$v/slim"
+	if [ "$v" = "$latest" ]; then
+		docker tag -f "$repo:$v" "$repo"
+		docker tag -f "$repo:$v-onbuild" "$repo:onbuild"
+		docker tag -f "$repo:$v-slim" "$repo:slim"
 	fi
 done
-
-# we don't have /u/arm64
-if [ "\$prefix" != 'arm64' ]; then
-	docker images "\$repo" \\
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
-		| xargs -rtn1 docker push
-fi
-""")
+''' + multiarch.templatePush(meta))
 		}
 	}
 }

@@ -1,24 +1,16 @@
-// Alpine only officially supports armhf, x86, x86_64
-def arches = [
-	//'arm64',
-	//'armel',
-	'armhf',
-	//'ppc64le',
-	//'s390x',
-]
+import vars.multiarch
 
-def apkArches = [
-	'amd64': 'x86_64',
-	'i386': 'x86',
-]
+for (arch in multiarch.allArches()) {
+	meta = multiarch.meta(getClass(), arch)
+	if (meta.apkArch == null) {
+		// skip unsupported architectures
+		continue
+	}
 
-for (arch in arches) {
-	apkArch = apkArches.containsKey(arch) ? apkArches[arch] : arch
-
-	freeStyleJob("docker-${arch}-alpine") {
-		description("""<a href="https://hub.docker.com/r/${arch}/alpine/" target="_blank">Docker Hub page (<code>${arch}/alpine</code>)</a>""")
+	freeStyleJob(meta.name) {
+		description(meta.description)
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
+		label(meta.label)
 		scm {
 			git {
 				remote {
@@ -35,15 +27,11 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell("""\
-prefix='${arch}'
-repo='alpine'
-apkArch='${apkArch}'
-
+			shell(multiarch.templateArgs(meta, ['apkArch']) + '''
 sudo rm -rf tmp
 git clean -dfx
 
-case "\$apkArch" in
+case "$apkArch" in
 	armhf)
 		# armhf support didn't exist until 3.x
 		rm -r versions/library-2.*
@@ -55,21 +43,21 @@ esac
 optionsFiles=( versions/library-*/options )
 
 # remove "-s" from the BUILD_OPTIONS (we'll specify that explicitly)
-sed -i 's! -s ! !g' "\${optionsFiles[@]}"
+sed -i 's! -s ! !g' "${optionsFiles[@]}"
 
-for options in "\${optionsFiles[@]}"; do
+for options in "${optionsFiles[@]}"; do
 	(
-		source "\$options"
-		: "\${RELEASE:?}" "\${MIRROR:?}"
+		source "$options"
+		: "${RELEASE:?}" "${MIRROR:?}"
 		
-		mkdir "apk-tools-\$RELEASE"
-		cd "apk-tools-\$RELEASE"
-		curl -fSL "\$MIRROR/\$RELEASE/main/\$apkArch/APKINDEX.tar.gz" \
+		mkdir "apk-tools-$RELEASE"
+		cd "apk-tools-$RELEASE"
+		curl -fSL "$MIRROR/$RELEASE/main/$apkArch/APKINDEX.tar.gz" \\
 			| tar -xvz
 		get_package() {
-			local pkg="\$1"
-			local ver="\$(awk -F: '\$1 == "P" { pkg = \$2 } pkg == "'"\$pkg"'" && \$1 == "V" { print \$2 }' APKINDEX)"
-			curl -fSL "\$MIRROR/\$RELEASE/main/\$apkArch/\$pkg-\$ver.apk" \
+			local pkg="$1"
+			local ver="$(awk -F: '$1 == "P" { pkg = $2 } pkg == "'"$pkg"'" && $1 == "V" { print $2 }' APKINDEX)"
+			curl -fSL "$MIRROR/$RELEASE/main/$apkArch/$pkg-$ver.apk" \\
 				| tar -xvz
 		}
 		get_package alpine-keys
@@ -80,43 +68,36 @@ done
 
 # put temporary files in a convenient, known location
 mkdir tmp
-export TMPDIR="\$PWD/tmp"
+export TMPDIR="$PWD/tmp"
 
 # this loop is adapted from build()
 # see https://github.com/gliderlabs/docker-alpine/blob/9e700b7cbdddf0b95e3786ff8de7ecea8962826c/build#L3-L33
-for options in "\${optionsFiles[@]}"; do
+for options in "${optionsFiles[@]}"; do
 	(
-		dir="\$(dirname "\$options")"
+		dir="$(dirname "$options")"
 		
-		source "\$options"
-		: "\${TAGS:?}" "\${BUILD_OPTIONS:?}" "\${RELEASE:?}"
+		source "$options"
+		: "${TAGS:?}" "${BUILD_OPTIONS:?}" "${RELEASE:?}"
 		
 		# put "apk" in the PATH
-		apkTools="\$PWD/apk-tools-\$RELEASE"
-		export PATH="\$PATH:\$apkTools/sbin"
+		apkTools="$PWD/apk-tools-$RELEASE"
+		export PATH="$PATH:$apkTools/sbin"
 		
 		# adjust the script to look for /etc/apk/keys in the correct place
-		sed "s!/etc/apk/keys!\$apkTools/etc/apk/keys!g" builder/scripts/mkimage-alpine.bash > "\$dir/mkimage-alpine.bash"
+		sed "s!/etc/apk/keys!$apkTools/etc/apk/keys!g" builder/scripts/mkimage-alpine.bash > "$dir/mkimage-alpine.bash"
 		
-		cd "\$dir"
+		cd "$dir"
 		
 		chmod +x mkimage-alpine.bash
-		sudo PATH="\$PATH" \
-			./mkimage-alpine.bash "\${BUILD_OPTIONS[@]}"
-		for tag in "\${TAGS[@]}"; do
-			[[ "\$tag" == "\$repo":* ]]
-			docker build -t "\$prefix/\$tag" .
+		sudo PATH="$PATH" \\
+			./mkimage-alpine.bash "${BUILD_OPTIONS[@]}"
+		for tag in "${TAGS[@]}"; do
+			[[ "$tag" == "$image":* ]]
+			docker build -t "$prefix/$tag" .
 		done
 	)
 done
-
-# we don't have /u/arm64
-if [ "\$prefix" != 'arm64' ]; then
-	docker images "\$prefix/\$repo" \\
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
-		| xargs -rtn1 docker push
-fi
-""")
+''' + multiarch.templatePush(meta))
 		}
 	}
 }

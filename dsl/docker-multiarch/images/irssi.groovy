@@ -1,16 +1,12 @@
-def arches = [
-	'arm64',
-	'armel',
-	'armhf',
-	'ppc64le',
-	's390x',
-]
+import vars.multiarch
 
-for (arch in arches) {
-	freeStyleJob("docker-${arch}-irssi") {
-		description("""<a href="https://hub.docker.com/r/${arch}/irssi/" target="_blank">Docker Hub page (<code>${arch}/irssi</code>)</a>""")
+for (arch in multiarch.allArches()) {
+	meta = multiarch.meta(getClass(), arch)
+
+	freeStyleJob(meta.name) {
+		description(meta.description)
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
+		label(meta.label)
 		scm {
 			git {
 				remote { url('https://github.com/jfrazelle/irssi.git') }
@@ -24,23 +20,13 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell("""\
-prefix='${arch}'
-repo="\$prefix/irssi"
+			shell(multiarch.templateArgs(meta) + '''
+sed -i "s!^FROM !FROM $prefix/!" Dockerfile
 
-sed -i "s!^FROM !FROM \$prefix/!" Dockerfile
-
-docker build -t "\$repo" .
-version="\$(awk '\$1 == "ENV" && \$2 == "IRSSI_VERSION" { print \$3; exit }' Dockerfile)"
-docker tag -f "\$repo" "\$repo:\$version"
-
-# we don't have /u/arm64
-if [ "\$prefix" != 'arm64' ]; then
-	docker images "\$repo" \\
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
-		| xargs -rtn1 docker push
-fi
-""")
+docker build -t "$repo" .
+version="$(awk '$1 == "ENV" && $2 == "IRSSI_VERSION" { print $3; exit }' Dockerfile)"
+docker tag -f "$repo" "$repo:$version"
+''' + multiarch.templatePush(meta))
 		}
 	}
 }

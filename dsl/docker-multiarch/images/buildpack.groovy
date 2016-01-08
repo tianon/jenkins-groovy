@@ -1,16 +1,12 @@
-def arches = [
-	'arm64',
-	'armel',
-	'armhf',
-	'ppc64le',
-	's390x',
-]
+import vars.multiarch
 
-for (arch in arches) {
-	freeStyleJob("docker-${arch}-buildpack") {
-		description("""<a href="https://hub.docker.com/r/${arch}/buildpack-deps/" target="_blank">Docker Hub page (<code>${arch}/buildpack-deps</code>)</a>""")
+for (arch in multiarch.allArches()) {
+	meta = multiarch.meta(getClass(), arch)
+
+	freeStyleJob(meta.name) {
+		description(meta.description)
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
+		label(meta.label)
 		scm {
 			git {
 				remote { url('https://github.com/docker-library/buildpack-deps.git') }
@@ -24,52 +20,45 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell("""\
-prefix='${arch}'
-repo="\$prefix/buildpack-deps"
-
-sed -i "s!^FROM !FROM \$prefix/!" Dockerfile.template*
+			shell(multiarch.templateArgs(meta) + '''
+sed -i "s!^FROM !FROM $prefix/!" Dockerfile.template*
 ./update.sh
 
-for v in */; do
-	v="\${v%/}"
-	if \\
-		! docker inspect "\$prefix/debian:\$v" &> /dev/null \\
-		&& ! docker inspect "\$prefix/ubuntu:\$v" &> /dev/null \\
-	; then
-		echo >&2 "warning, neither '\$prefix/debian:\$v' or '\$prefix/ubuntu:\$v' exist; skipping \$v "
-		rm -r "\$v/"
-	fi
-done
+(
+	set +x
+	for v in */; do
+		v="${v%/}"
+		if \\
+			! docker inspect "$prefix/debian:$v" &> /dev/null \\
+			&& ! docker inspect "$prefix/ubuntu:$v" &> /dev/null \\
+		; then
+			echo >&2 "warning, neither '$prefix/debian:$v' or '$prefix/ubuntu:$v' exist; skipping $v "
+			rm -r "$v/"
+		fi
+	done
+)
 
-latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')"
+latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 failed=0
 for v in */; do
-	v="\${v%/}"
+	v="${v%/}"
 	if \\
-		docker build -t "\$repo:\$v-curl" "\$v/curl" \\
-		&& docker build -t "\$repo:\$v-scm" "\$v/scm" \\
-		&& docker build -t "\$repo:\$v" "\$v"; then
-		if [ "\$v" = "\$latest" ]; then
-			docker tag -f "\$repo:\$v-curl" "\$repo:curl"
-			docker tag -f "\$repo:\$v-scm" "\$repo:scm"
-			docker tag -f "\$repo:\$v" "\$repo"
+		docker build -t "$repo:$v-curl" "$v/curl" \\
+		&& docker build -t "$repo:$v-scm" "$v/scm" \\
+		&& docker build -t "$repo:$v" "$v"; then
+		if [ "$v" = "$latest" ]; then
+			docker tag -f "$repo:$v-curl" "$repo:curl"
+			docker tag -f "$repo:$v-scm" "$repo:scm"
+			docker tag -f "$repo:$v" "$repo"
 		fi
 	else
-		echo >&2 "Failed to build some part of \$v; moving on."
+		echo >&2 "Failed to build some part of $v; moving on."
 		(( failed++ )) || true
 	fi
 done
-
-# we don't have /u/arm64
-if [ "\$prefix" != 'arm64' ]; then
-	docker images "\$repo" \\
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
-		| xargs -rtn1 docker push
-fi
-
-exit "\$failed"
-""")
+''' + multiarch.templatePush(meta) + '''
+exit "$failed"
+''')
 		}
 	}
 }

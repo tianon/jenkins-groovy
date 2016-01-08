@@ -1,16 +1,12 @@
-def arches = [
-	'arm64',
-	'armel',
-	'armhf',
-	'ppc64le',
-	's390x',
-]
+import vars.multiarch
 
-for (arch in arches) {
-	freeStyleJob("docker-${arch}-erlang") {
-		description("""<a href="https://hub.docker.com/r/${arch}/erlang/" target="_blank">Docker Hub page (<code>${arch}/erlang</code>)</a>""")
+for (arch in multiarch.allArches()) {
+	meta = multiarch.meta(getClass(), arch)
+
+	freeStyleJob(meta.name) {
+		description(meta.description)
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
+		label(meta.label)
 		scm {
 			git {
 				remote { url('https://github.com/c0b/docker-erlang-otp.git') }
@@ -24,18 +20,15 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell("""\
-prefix='${arch}'
-repo="\$prefix/erlang"
-
+			shell(multiarch.templateArgs(meta) + '''
 # ignore ancient versions
 rm -r R*/ elixir/
 
-sed -i "s!^FROM !FROM \$prefix/!" */{,*/}Dockerfile
+sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
 # explicitly set the gcc arch tuple to the arch of gcc from the build environment
 # (this makes sure our armhf build on arm64 hardware builds an armhf gcc)
-sed -i 's!/configure !/configure --build="\$(gcc -print-multiarch)" !g' */Dockerfile
+sed -i 's!/configure !/configure --build="$(gcc -print-multiarch)" !g' */Dockerfile
 
 # update autoconf config.guess and config.sub so they support our architectures for sure
 sed -i 's!.* autoconf !\\t\\&\\& ( cd erts/autoconf \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD" -o config.guess \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD" -o config.sub ) \\\\\\n&!' */{,*/}Dockerfile
@@ -43,24 +36,17 @@ sed -i 's!.* autoconf !\\t\\&\\& ( cd erts/autoconf \\&\\& curl -fSL "http://git
 latest='18' # TODO discover this automatically somehow
 
 for v in */; do
-	v="\${v%/}"
-	docker build -t "\$repo:\$v" "\$v"
-	docker build -t "\$repo:\$v-onbuild" "\$v/onbuild"
-	docker build -t "\$repo:\$v-slim" "\$v/slim"
-	if [ "\$v" = "\$latest" ]; then
-		docker tag -f "\$repo:\$v" "\$repo"
-		docker tag -f "\$repo:\$v-onbuild" "\$repo:onbuild"
-		docker tag -f "\$repo:\$v-slim" "\$repo:slim"
+	v="${v%/}"
+	docker build -t "$repo:$v" "$v"
+	docker build -t "$repo:$v-onbuild" "$v/onbuild"
+	docker build -t "$repo:$v-slim" "$v/slim"
+	if [ "$v" = "$latest" ]; then
+		docker tag -f "$repo:$v" "$repo"
+		docker tag -f "$repo:$v-onbuild" "$repo:onbuild"
+		docker tag -f "$repo:$v-slim" "$repo:slim"
 	fi
 done
-
-# we don't have /u/arm64
-if [ "\$prefix" != 'arm64' ]; then
-	docker images "\$repo" \\
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
-		| xargs -rtn1 docker push
-fi
-""")
+''' + multiarch.templatePush(meta))
 		}
 	}
 }

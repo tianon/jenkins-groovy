@@ -1,10 +1,4 @@
-def arches = [
-	'arm64',
-	'armel',
-	'armhf',
-	'ppc64le',
-	's390x',
-]
+import vars.multiarch
 
 def images = [
 	'alpine',
@@ -69,7 +63,7 @@ nestedView('docker-multiarch') {
 			}
 			views {
 				myView(delegate.&listView, '-all', 'docker-.*')
-				for (arch in arches) {
+				for (arch in multiarch.allArches()) {
 					myView(delegate.&listView, arch, 'docker-' + arch + '-.*')
 				}
 			}

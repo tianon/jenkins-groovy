@@ -1,16 +1,12 @@
-def arches = [
-	'arm64',
-	'armel',
-	'armhf',
-	'ppc64le',
-	's390x',
-]
+import vars.multiarch
 
-for (arch in arches) {
-	freeStyleJob("docker-${arch}-hello") {
-		description("""<a href="https://hub.docker.com/r/${arch}/hello-world/" target="_blank">Docker Hub page (<code>${arch}/hello-world</code>)</a>""")
+for (arch in multiarch.allArches()) {
+	meta = multiarch.meta(getClass(), arch)
+
+	freeStyleJob(meta.name) {
+		description(meta.description)
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
+		label(meta.label)
 		scm {
 			git {
 				remote { url('https://github.com/docker-library/hello-world.git') }
@@ -24,18 +20,15 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell("""\
-prefix='${arch}'
-repo="\$prefix/hello-world"
-
-sed -i "s!^FROM !FROM \$prefix/!; s/nasm/gcc/" Dockerfile.build
+			shell(multiarch.templateArgs(meta) + '''
+sed -i "s!^FROM !FROM $prefix/!; s/nasm/gcc/" Dockerfile.build
 sed -i 's/nasm/gcc -static -Os/g; s/\\.asm/\\.c/g' Makefile
-sed -i "s/hello-world:build/hello-world:\$prefix-build/g" update.sh
+sed -i "s/hello-world:build/hello-world:$prefix-build/g" update.sh
 
 # convert hello.asm message contents to C
-helloWorldC="\$(awk '
-	\$1 == "message:" { yay = 1; next }
-	\$1 == "length:" { yay = 0; next }
+helloWorldC="$(awk '
+	$1 == "message:" { yay = 1; next }
+	$1 == "length:" { yay = 0; next }
 	yay {
 		gsub(/^.*db /, "\\t");
 		gsub(/\\"/, "\\\\\\"");
@@ -49,7 +42,7 @@ cat > hello.c <<EOHWC
 #include <stdio.h>
 
 const char *msg =
-\$helloWorldC;
+$helloWorldC;
 
 int main() {
 	printf("%s", msg);
@@ -59,17 +52,10 @@ EOHWC
 
 ./update.sh
 
-docker build -t "\$repo" .
+docker build -t "$repo" .
 
-docker run --rm "\$repo"
-
-# we don't have /u/arm64
-if [ "\$prefix" != 'arm64' ]; then
-	docker images "\$repo" \\
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
-		| xargs -rtn1 docker push
-fi
-""")
+docker run --rm "$repo"
+''' + multiarch.templatePush(meta))
 		}
 	}
 }

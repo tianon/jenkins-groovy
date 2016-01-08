@@ -1,16 +1,12 @@
-def arches = [
-	'arm64',
-	'armel',
-	'armhf',
-	'ppc64le',
-	's390x',
-]
+import vars.multiarch
 
-for (arch in arches) {
-	freeStyleJob("docker-${arch}-perl") {
-		description("""<a href="https://hub.docker.com/r/${arch}/perl/" target="_blank">Docker Hub page (<code>${arch}/perl</code>)</a>""")
+for (arch in multiarch.allArches()) {
+	meta = multiarch.meta(getClass(), arch)
+
+	freeStyleJob(meta.name) {
+		description(meta.description)
 		logRotator { daysToKeep(30) }
-		label("docker-${arch}")
+		label(meta.label)
 		scm {
 			git {
 				remote { url('https://github.com/perl/docker-perl.git') }
@@ -24,14 +20,11 @@ for (arch in arches) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell("""\
-prefix='${arch}'
-repo="\$prefix/perl"
-
-sed -i "s!^FROM !FROM \$prefix/!" */Dockerfile
+			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
 # see https://sources.debian.net/src/perl/jessie/debian/config.debian/
-case "\$prefix" in
+case "$dpkgArch" in
 	armel|armhf)
 		# *** You have chosen a maximally 64-bit build,
 		# *** but your pointers are only 4 bytes wide.
@@ -40,44 +33,37 @@ case "\$prefix" in
 		sed -i 's! -Duse64bitall! -Duse64bitint!' */Dockerfile
 		;;
 esac
-sed -i "s!Configure !Configure -Darchname=\$prefix-linux !" */Dockerfile
+sed -i "s!Configure !Configure -Darchname='$(gcc -print-multiarch)' !" */Dockerfile
 
-#latest="\$(./generate-stackbrew-library.sh | awk '\$1 == "latest:" { print \$3; exit }')" # TODO calculate "latest" somehow
+#latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')" # TODO calculate "latest" somehow
 latest='5.022.001-64bit'
 
 for f in */; do
-	f="\${f%/}"
-	var="\${f##*,}" # "threaded"
-	[ "\$f" != "\$var" ] || var=
-	suff="\${var:+-\$var}"
-	major="\${f%%.*}" # "5"
-	minor="\${f#\$major.}"
-	minor="\${minor%%.*}" # "022"
-	patch="\${f#\$major.\$minor.}"
-	patch="\${patch%%-*}" # "001"
-	while [ "\$minor" != "\${minor#0}" ]; do minor="\${minor#0}"; done # "22"
-	while [ "\$patch" != "\${patch#0}" ]; do patch="\${patch#0}"; done # "1"
-	if [ "\$major" -lt 5 ]; then continue; fi
-	if [ "\$minor" -lt 20 ]; then continue; fi
-	v="\$major.\$minor.\$patch\$suff"
-	docker build -t "\$repo:\$v" "\$f"
-	docker tag -f "\$repo:\$v" "\$repo:\$major.\$minor\$suff"
-	if [ "\$f" = "\$latest" ]; then
-		docker tag -f "\$repo:\$v" "\$repo:\$major"
-		docker tag -f "\$repo:\$v" "\$repo"
-	elif [ "\$var" -a "\$f" = "\$latest,\$var" ]; then
-		docker tag -f "\$repo:\$v" "\$repo:\$major\$suff"
-		docker tag -f "\$repo:\$v" "\$repo:\$var"
+	f="${f%/}"
+	var="${f##*,}" # "threaded"
+	[ "$f" != "$var" ] || var=
+	suff="${var:+-$var}"
+	major="${f%%.*}" # "5"
+	minor="${f#$major.}"
+	minor="${minor%%.*}" # "022"
+	patch="${f#$major.$minor.}"
+	patch="${patch%%-*}" # "001"
+	while [ "$minor" != "${minor#0}" ]; do minor="${minor#0}"; done # "22"
+	while [ "$patch" != "${patch#0}" ]; do patch="${patch#0}"; done # "1"
+	if [ "$major" -lt 5 ]; then continue; fi
+	if [ "$minor" -lt 20 ]; then continue; fi
+	v="$major.$minor.$patch$suff"
+	docker build -t "$repo:$v" "$f"
+	docker tag -f "$repo:$v" "$repo:$major.$minor$suff"
+	if [ "$f" = "$latest" ]; then
+		docker tag -f "$repo:$v" "$repo:$major"
+		docker tag -f "$repo:$v" "$repo"
+	elif [ "$var" -a "$f" = "$latest,$var" ]; then
+		docker tag -f "$repo:$v" "$repo:$major$suff"
+		docker tag -f "$repo:$v" "$repo:$var"
 	fi
 done
-
-# we don't have /u/arm64
-if [ "\$prefix" != 'arm64' ]; then
-	docker images "\$repo" \\
-		| awk -F '  +' 'NR>1 { print \$1 ":" \$2 }' \\
-		| xargs -rtn1 docker push
-fi
-""")
+''' + multiarch.templatePush(meta))
 		}
 	}
 }

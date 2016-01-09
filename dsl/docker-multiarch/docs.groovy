@@ -36,7 +36,7 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
-			upstream("docker-${arch}-perl", 'UNSTABLE')
+			upstream("docker-${arch}-perl, docker-${arch}-hello", 'UNSTABLE')
 			scm('H/6 * * * *')
 		}
 		wrappers {

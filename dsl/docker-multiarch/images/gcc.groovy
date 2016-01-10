@@ -28,7 +28,7 @@ sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 sed -i 's!/configure !/configure --build="$(gcc -print-multiarch)" !g' */Dockerfile
 
 # update autoconf config.guess and config.sub so they support our architectures for sure
-sed -i 's!.*/configure !\\t\\&\\& ( cd /usr/src/gcc/gmp \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD" -o config.guess \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD" -o config.sub ) \\\\\\n&!' */{,*/}Dockerfile
+sed -i 's!.*/configure !\\t\\&\\& ( set -e; cd /usr/src/gcc; for f in config.guess config.sub; do curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=$f;hb=HEAD" -o "$f"; find -mindepth 2 -name "$f" -exec cp -v "$f" "{}" ";"; done ) \\\\\\n&!' */Dockerfile
 
 (
 	set +x

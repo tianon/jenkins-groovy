@@ -18,7 +18,15 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
-			upstream("docker-${arch}-debian, docker-${arch}-alpine", 'UNSTABLE')
+			upstreams = "docker-${arch}-alpine"
+			if (arch == 'armel' || arch == 'armhf') {
+				// we build on an arm64 host, and the uclibc build system gets confused in our non-arm64 environment
+				upstreams += ', docker-arm64-debian'
+			}
+			else {
+				upstreams += ", docker-${arch}-debian"
+			}
+			upstream(upstreams, 'UNSTABLE')
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }
@@ -34,6 +42,8 @@ case "$dpkgArch" in
 		# "ARMv4t"
 		# https://wiki.debian.org/ArmEabiPort#Choice_of_minimum_CPU
 		sed -i 's!BR2_x86_64!BR2_arm BR2_arm922t BR2_ARM_EABI BR2_ARM_SOFT_FLOAT BR2_ARM_INSTRUCTIONS_THUMB!g' uclibc/Dockerfile.builder
+		# we build on an arm64 host, and the uclibc build system gets confused in our non-arm64 environment
+		sed -i "s!^FROM $prefix/!FROM $prefixArm64/!" uclibc/Dockerfile.builder
 		;;
 
 	armhf)

@@ -71,8 +71,9 @@ fi
 for v in */; do
 	v="${v%/}"
 	./build.sh "$v"
+	docker tag -f "$image:$prefix" "$repo:$v"
 	if [ "$v" = "$latest" ]; then
-		docker tag -f "$image:$prefix-$v" "$repo"
+		docker tag -f "$repo:$v" "$repo"
 	fi
 done
 ''' + multiarch.templatePush(meta))

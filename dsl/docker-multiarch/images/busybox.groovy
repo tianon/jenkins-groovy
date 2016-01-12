@@ -18,15 +18,18 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
-			upstreams = "docker-${arch}-alpine"
+			upstreams = []
+			if (meta.apkArch) {
+				upstreams += "docker-${arch}-alpine"
+			}
 			if (arch == 'armel' || arch == 'armhf') {
 				// we build on an arm64 host, and the uclibc build system gets confused in our non-arm64 environment
-				upstreams += ', docker-arm64-debian'
+				upstreams += 'docker-arm64-debian'
 			}
 			else {
-				upstreams += ", docker-${arch}-debian"
+				upstreams += "docker-${arch}-debian"
 			}
-			upstream(upstreams, 'UNSTABLE')
+			upstream(upstreams.join(', '), 'UNSTABLE')
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }

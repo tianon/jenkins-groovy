@@ -42,6 +42,8 @@ case "$dpkgArch" in
 		sed -i 's!BR2_x86_64!BR2_arm BR2_cortex_a5 BR2_ARM_EABIHF BR2_ARM_FPU_VFPV3D16 BR2_ARM_INSTRUCTIONS_THUMB2!g' uclibc/Dockerfile.builder
 		# we build on an arm64 host, and the uclibc build system gets confused in our non-arm64 environment
 		sed -i "s!^FROM $prefix/!FROM $prefixArm64/!" uclibc/Dockerfile.builder
+		# for some reason, musl on armhf doesn't like optimizing getconf for size
+		sed -i 's! -Os ! !g' musl/Dockerfile.builder
 		;;
 
 	arm64|ppc64el|s390x)

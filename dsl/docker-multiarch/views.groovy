@@ -26,7 +26,7 @@ def images = [
 
 def myView(viewFunc, viewName, viewRegex) {
 	viewFunc(viewName) {
-		filterBuildQueue()
+		//filterBuildQueue()
 		filterExecutors()
 		jobs {
 			regex(viewRegex)

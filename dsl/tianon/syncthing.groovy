@@ -6,6 +6,7 @@ freeStyleJob('tianon-syncthing') {
 			remote {
 				url('git@github.com:tianon/docker-syncthing.git')
 				credentials('tianon')
+				name('origin')
 			}
 			branches('*/master')
 			clean()
@@ -20,8 +21,6 @@ freeStyleJob('tianon-syncthing') {
 		shell("""\
 ./update.sh
 
-./build.sh
-
 for v in */; do
 	v="\${v%/}"
 	full="\$(awk '
@@ -33,6 +32,9 @@ for v in */; do
 		git commit -m "Update \$v to \$full" -- "\$v/Dockerfile" || true
 	fi
 done
+git push origin HEAD:master || true
+
+./build.sh
 
 ./push.sh
 
@@ -42,11 +44,5 @@ docker tag -f tianon/syncthing:inotify tianon/syncthing-inotify
 docker push tianon/syncthing-cli
 docker push tianon/syncthing-inotify
 """)
-	}
-	publishers {
-		git {
-			branch('origin', 'master')
-			pushOnlyIfSuccess()
-		}
 	}
 }

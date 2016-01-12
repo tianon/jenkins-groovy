@@ -26,7 +26,7 @@ for (arch in multiarch.allArches()) {
 			meta['prefixArm64'] = multiarch.prefix('arm64')
 			shell(multiarch.templateArgs(meta, ['dpkgArch', 'prefixArm64']) + '''
 sed -i "s!^FROM !FROM $prefix/!" */Dockerfile.builder
-sed -i "s!^base='.+'!base='$image:$prefix-'!; s! --pull ! !g" build.sh
+sed -ri "s!^base='.+'!base='$image:$prefix-'!; s! --pull ! !g" build.sh
 
 # remove some unsupported combinations
 case "$dpkgArch" in

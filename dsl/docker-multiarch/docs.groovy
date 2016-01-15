@@ -51,9 +51,12 @@ images=(
 	${images.join("\n\t")}
 )""" + '''
 archImages=()
+set +x
 for image in "${images[@]}"; do
 	archImages+=( "$prefix/$image" )
 done
+echo "archImages=( ${archImages[*]} )"
+set -x
 
 sed -i "s!^FROM !FROM $prefix/!" Dockerfile
 cat > .template-helpers/generate-dockerfile-links-partial.sh <<-'EOF'
@@ -75,7 +78,7 @@ EOF
 sed -ri "s!^docker pull !#&!; s!^(docker run --rm|docker images) !\\1 $prefix/!" hello-world/update.sh
 ./update.sh "${images[@]}"
 
-docker build -t docker-library-docs .
+docker build -t "docker-library-docs:$prefix" .
 test -t 1 && it='-it' || it='-i'
 set +x
 docker run "$it" --rm -e TERM \\

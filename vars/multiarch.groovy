@@ -5,6 +5,7 @@ def static allArches(blacklist = []) {
 		'arm64',
 		'armel',
 		'armhf',
+		'i386',
 		'ppc64le',
 		's390x',
 	] - blacklist

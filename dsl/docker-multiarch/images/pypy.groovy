@@ -36,6 +36,9 @@ case "$dpkgArch" in
 	armhf)
 		sed -i 's!linux64!linux-armhf-raring!g' */{,*/}Dockerfile
 		;;
+	i386)
+		sed -i 's!linux64!linux!g' */{,*/}Dockerfile
+		;;
 	ppc64el)
 		sed -i 's!linux64!ppc64le!g' */{,*/}Dockerfile
 		# now for the bizarre...  4.0.0 on bitbucket had ppc64le, but not 4.0.1

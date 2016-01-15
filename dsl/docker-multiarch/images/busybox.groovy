@@ -59,7 +59,7 @@ case "$dpkgArch" in
 		sed -i 's! -Os ! !g' musl/Dockerfile.builder
 		;;
 
-	arm64|ppc64el|s390x)
+	arm64|i386|ppc64el|s390x)
 		# TODO determine the possibility and/or breadth of uclibc hacks/config required for these arches
 		rm -r uclibc
 		;;

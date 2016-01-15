@@ -20,19 +20,17 @@ for (arch in multiarch.allArches()) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+			shell(multiarch.templateArgs(meta, ['archBits']) + '''
 sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
 # see https://sources.debian.net/src/perl/jessie/debian/config.debian/
-case "$dpkgArch" in
-	armel|armhf)
-		# *** You have chosen a maximally 64-bit build,
-		# *** but your pointers are only 4 bytes wide.
-		# *** Please rerun Configure without -Duse64bitall.
-		# *** Since you have quads, you could possibly try with -Duse64bitint.
-		sed -i 's! -Duse64bitall! -Duse64bitint!' */Dockerfile
-		;;
-esac
+if [ "$archBits" = '32' ]; then
+	# *** You have chosen a maximally 64-bit build,
+	# *** but your pointers are only 4 bytes wide.
+	# *** Please rerun Configure without -Duse64bitall.
+	# *** Since you have quads, you could possibly try with -Duse64bitint.
+	sed -i 's! -Duse64bitall! -Duse64bitint!' */Dockerfile
+fi
 sed -i "s!Configure !Configure -Darchname='$(gcc -print-multiarch)' !" */Dockerfile
 
 #latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')" # TODO calculate "latest" somehow

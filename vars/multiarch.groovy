@@ -45,6 +45,17 @@ def static apkArch(arch) {
 	], arch, null)
 }
 
+def static archBits(arch) {
+	return optional([
+		'arm64': '64',
+		'armel': '32',
+		'armhf': '32',
+		'i386': '32',
+		'ppc64le': '64',
+		's390x': '64',
+	], arch, 'unknown')
+}
+
 // cls comes from "getClass()"
 def static meta(cls, arch) {
 	def image = image(cls.name)
@@ -57,6 +68,7 @@ def static meta(cls, arch) {
 		'image': image,
 		'dpkgArch': dpkgArch(arch),
 		'apkArch': apkArch(arch),
+		'archBits': archBits(arch),
 	]
 }
 

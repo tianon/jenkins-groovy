@@ -31,6 +31,7 @@ images.each { repo, suites ->
 
 matrixJob('tianon-audit-deb-images') {
 	logRotator { daysToKeep(30) }
+	label('tianon')
 	triggers {
 		cron('H H/12 * * *')
 	}

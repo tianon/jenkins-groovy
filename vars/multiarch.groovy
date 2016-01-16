@@ -45,6 +45,18 @@ def static apkArch(arch) {
 	], arch, null)
 }
 
+def static gnuArch(arch) {
+	// "gcc -print-multiarch" / "dpkg-architecture -qDEB_HOST_GNU_TYPE"
+	return optional([
+		'arm64': 'aarch64-linux-gnu',
+		'armel': 'arm-linux-gnueabi',
+		'armhf': 'arm-linux-gnueabihf',
+		'i386': 'i586-linux-gnu',
+		'ppc64le': 'powerpc64le-linux-gnu',
+		's390x': 's390x-linux-gnu',
+	], arch, 'UNKNOWN')
+}
+
 def static archBits(arch) {
 	return optional([
 		'arm64': '64',
@@ -68,6 +80,7 @@ def static meta(cls, arch) {
 		'image': image,
 		'dpkgArch': dpkgArch(arch),
 		'apkArch': apkArch(arch),
+		'gnuArch': gnuArch(arch),
 		'archBits': archBits(arch),
 	]
 }

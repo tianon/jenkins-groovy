@@ -20,13 +20,14 @@ for (arch in multiarch.allArches()) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+			shell(multiarch.templateArgs(meta, ['dpkgArch', 'gccArch']) + '''
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
 case "$dpkgArch" in
 	s390x)
 		# bundled pcre is silly and fails to build on s390x (too old)
-		sed -i 's!buildDeps="!buildDeps="libpcre3-dev !; s!/configure !/configure --with-libdir="lib/$(gcc -print-multiarch)" --with-pcre-regex=/usr !g' */{,*/}Dockerfile
+		sed -i 's!buildDeps="!buildDeps="libpcre3-dev !' */{,*/}Dockerfile
+		sed -i "s!/configure !/configure --with-libdir='lib/$gccArch' --with-pcre-regex=/usr !g" */{,*/}Dockerfile
 		;;
 esac
 

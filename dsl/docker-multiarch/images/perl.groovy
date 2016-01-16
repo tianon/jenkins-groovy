@@ -20,7 +20,7 @@ for (arch in multiarch.allArches()) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(multiarch.templateArgs(meta, ['archBits']) + '''
+			shell(multiarch.templateArgs(meta, ['archBits', 'gccArch']) + '''
 sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
 # see https://sources.debian.net/src/perl/jessie/debian/config.debian/
@@ -31,7 +31,7 @@ if [ "$archBits" = '32' ]; then
 	# *** Since you have quads, you could possibly try with -Duse64bitint.
 	sed -i 's! -Duse64bitall! -Duse64bitint!' */Dockerfile
 fi
-sed -i "s!Configure !Configure -Darchname='$(gcc -print-multiarch)' !" */Dockerfile
+sed -i "s!Configure !Configure -Darchname='$gccArch' !" */Dockerfile
 
 #latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')" # TODO calculate "latest" somehow
 latest='5.022.001-64bit'

@@ -83,7 +83,7 @@ test -t 1 && it='-it' || it='-i'
 set +x
 docker run "$it" --rm -e TERM \\
 	--entrypoint './push.pl' \\
-	docker-library-docs \\
+	"docker-library-docs:$prefix" \\
 	--username "$USERNAME" \\
 	--password "$PASSWORD" \\
 	--batchmode \\

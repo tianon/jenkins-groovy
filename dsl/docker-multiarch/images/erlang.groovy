@@ -20,7 +20,7 @@ for (arch in multiarch.allArches()) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(multiarch.templateArgs(meta, ['gccArch']) + '''
+			shell(multiarch.templateArgs(meta, ['gnuArch']) + '''
 # ignore ancient versions
 rm -r R*/ elixir/
 
@@ -28,7 +28,7 @@ sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
 # explicitly set the gcc arch tuple to the arch of gcc from the build environment
 # (this makes sure our armhf build on arm64 hardware builds an armhf gcc)
-sed -i "s!/configure !/configure --build='$gccArch' !g" */Dockerfile
+sed -i "s!/configure !/configure --build='$gnuArch' !g" */Dockerfile
 
 # update autoconf config.guess and config.sub so they support our architectures for sure
 sed -i 's!.* autoconf !\\t\\&\\& ( cd erts/autoconf \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD" -o config.guess \\&\\& curl -fSL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD" -o config.sub ) \\\\\\n&!' */{,*/}Dockerfile

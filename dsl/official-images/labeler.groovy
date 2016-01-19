@@ -19,10 +19,14 @@ freeStyleJob('official-images-labeler') {
 		}
 	}
 	steps {
-		shell("""\
+		shell('''\
 docker build -t docker-library-issue-labeler .
 set +x
-docker run --rm docker-library-issue-labeler app "\$GITHUB_TOKEN"
-""")
+docker run --rm docker-library-issue-labeler \\
+	--token "$GITHUB_TOKEN" \\
+	--owner docker-library \\
+	--repo official-images \\
+	--state open
+''')
 	}
 }

@@ -1,4 +1,5 @@
 freeStyleJob('tianon-crank') {
+	disabled()
 	logRotator { daysToKeep(30) }
 	label('tianon')
 	scm {

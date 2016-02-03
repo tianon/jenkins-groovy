@@ -21,7 +21,7 @@ for (arch in multiarch.allArches()) {
 		wrappers { colorizeOutput() }
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
-sed -i "s!^FROM !FROM $prefix/!" Dockerfile.template*
+sed -i "s!^FROM !FROM $prefix/!" Dockerfile*.template
 ./update.sh
 
 (

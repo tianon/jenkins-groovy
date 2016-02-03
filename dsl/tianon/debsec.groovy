@@ -19,7 +19,7 @@ freeStyleJob('tianon-debian-security-mirror') {
 		shell("""\
 ./update.sh
 
-git commit -m 'Update debian-security.json' -- debian-security.json || true
+git commit -m 'Update debian-security.json' -- debian-security*.json || true
 """)
 	}
 	publishers {

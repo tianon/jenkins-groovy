@@ -24,6 +24,9 @@ for (arch in multiarch.allArches()) {
 # ignore ancient versions
 rm -r R*/ elixir/
 
+# we're not ready for this yet
+rm -r 19/
+
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
 # explicitly set the gcc arch tuple to the arch of gcc from the build environment

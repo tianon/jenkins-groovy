@@ -21,10 +21,11 @@ for (arch in multiarch.allArches()) {
 		wrappers { colorizeOutput() }
 		steps {
 			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
-sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
+sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
-docker build -t "$repo:apache" "apache"
-docker build -t "$repo:fpm" "fpm"
+docker build -t "$repo:apache" apache
+docker build -t "$repo:fpm" fpm
+docker tag -f "$repo:apache" "$repo"
 ''' + multiarch.templatePush(meta))
 		}
 	}

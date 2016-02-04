@@ -5,6 +5,7 @@ def images = [
 	'buildpack',
 	'busybox',
 	'debian',
+	'drupal',
 	'erlang',
 	'gcc',
 	'haproxy',

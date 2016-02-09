@@ -5,6 +5,7 @@ def images = [
 	'buildpack-deps',
 	'busybox',
 	'debian',
+	'drupal',
 	'erlang',
 	'gcc',
 	'haproxy',
@@ -20,6 +21,7 @@ def images = [
 	'redis',
 	'ruby',
 	'ubuntu',
+	'wordpress'
 ]
 
 for (arch in multiarch.allArches()) {

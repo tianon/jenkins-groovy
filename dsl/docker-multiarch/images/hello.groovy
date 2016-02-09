@@ -22,7 +22,7 @@ for (arch in multiarch.allArches()) {
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
 sed -i "s!^FROM !FROM $prefix/!; s/nasm/gcc/" Dockerfile.build
-sed -i 's/nasm/gcc -static -Os/g; s/\\.asm/\\.c/g' Makefile
+sed -i 's/nasm/gcc -static -Os -nostartfiles/g; s/\\.asm/\\.c/g' Makefile
 sed -i "s/hello-world:build/hello-world:$prefix-build/g" update.sh
 
 # convert hello.asm message contents to C
@@ -39,14 +39,14 @@ helloWorldC="$(awk '
 	}
 ' hello.asm)"
 cat > hello.c <<EOHWC
-#include <stdio.h>
+#include <unistd.h>
 
-const char *msg =
+const char msg[] =
 $helloWorldC;
 
-int main() {
-	printf("%s", msg);
-	return 0;
+void _start() {
+	write(1, msg, sizeof(msg) - 1);
+	_exit(0);
 }
 EOHWC
 

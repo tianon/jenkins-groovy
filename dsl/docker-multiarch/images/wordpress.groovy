@@ -20,7 +20,7 @@ for (arch in multiarch.allArches()) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+			shell(multiarch.templateArgs(meta) + '''
 sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
 docker build -t "$repo:apache" apache

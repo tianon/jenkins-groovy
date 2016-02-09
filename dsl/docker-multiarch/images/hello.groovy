@@ -22,7 +22,7 @@ for (arch in multiarch.allArches()) {
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
 sed -i "s!^FROM !FROM $prefix/!; s/nasm/gcc/" Dockerfile.build
-sed -i 's/nasm/gcc -static -Os -nostartfiles/g; s/\\.asm/\\.c/g' Makefile
+sed -i 's/nasm/gcc -static -Os -nostartfiles -fno-asynchronous-unwind-tables/g; s/\\.asm/\\.c/g' Makefile
 sed -i "s/hello-world:build/hello-world:$prefix-build/g" update.sh
 
 # convert hello.asm message contents to C
@@ -53,6 +53,8 @@ EOHWC
 ./update.sh
 
 docker build -t "$repo" .
+
+docker images "$repo"
 
 docker run --rm "$repo"
 ''' + multiarch.templatePush(meta))

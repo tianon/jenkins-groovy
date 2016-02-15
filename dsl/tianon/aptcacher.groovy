@@ -15,7 +15,12 @@ matrixJob('tianon-apt-cacher-maint') {
 	steps {
 		shell('''\
 if docker inspect --type container apt-cacher-ng > /dev/null; then
-	docker exec apt-cacher-ng /etc/cron.daily/apt-cacher-ng
+	docker exec apt-cacher-ng \\
+		/usr/lib/apt-cacher-ng/acngtool \\
+			maint \\
+				-c /etc/apt-cacher-ng \\
+				SocketPath=/var/run/apt-cacher-ng/socket \\
+				--verbose
 fi
 ''')
 	}

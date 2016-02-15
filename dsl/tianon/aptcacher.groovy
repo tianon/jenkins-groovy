@@ -10,10 +10,7 @@ matrixJob('tianon-apt-cacher-maint') {
 	wrappers { colorizeOutput() }
 	steps {
 		shell('''\
-#!/bin/bash
-set -eo pipefail
-
-if docker inspect --type container apt-cacher-ng &> /dev/null; then
+if docker inspect --type container apt-cacher-ng > /dev/null; then
 	docker exec apt-cacher-ng /etc/cron.daily/apt-cacher-ng
 fi
 ''')

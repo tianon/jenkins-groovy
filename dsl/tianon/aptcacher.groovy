@@ -5,7 +5,11 @@ matrixJob('tianon-apt-cacher-maint') {
 		cron('H H * * *')
 	}
 	axes {
-		label('host', 'tianon-nameless', 'tianon-viper')
+		label('host',
+			'tianon-nameless',
+			'tianon-viper',
+			'yosifkit-minas-morgul',
+		)
 	}
 	wrappers { colorizeOutput() }
 	steps {

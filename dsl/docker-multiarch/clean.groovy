@@ -16,6 +16,8 @@ matrixJob('docker-multiarch-clean') {
 	wrappers { colorizeOutput() }
 	steps {
 		shell('''\
+docker version
+
 docker ps -aq \\
 	| xargs --no-run-if-empty --verbose docker rm || true
 

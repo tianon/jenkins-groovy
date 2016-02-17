@@ -55,7 +55,7 @@ docker run -i --rm "\$image" sh -ec '
 	\$1 == "Inst" {
 		print \$2 " -- " \$3 " => " \$4
 	}
-' | tee temp
+' | sort | tee temp
 
 echo; echo
 

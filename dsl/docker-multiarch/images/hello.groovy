@@ -39,14 +39,17 @@ helloWorldC="$(awk '
 	}
 ' hello.asm)"
 cat > hello.c <<EOHWC
-#include <unistd.h>
+//#include <unistd.h>
+#include <sys/syscall.h>
 
 const char msg[] =
 $helloWorldC;
 
 void _start() {
-	write(1, msg, sizeof(msg) - 1);
-	_exit(0);
+	//write(1, msg, sizeof(msg) - 1);
+	syscall(SYS_write, 1, msg, sizeof(msg) - 1);
+	//_exit(0);
+	syscall(SYS_exit, 0);
 }
 EOHWC
 

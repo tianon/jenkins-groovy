@@ -35,7 +35,7 @@ for (arch in multiarch.allArches()) {
 		wrappers { colorizeOutput() }
 		steps {
 			meta['prefixArm64'] = multiarch.prefix('arm64')
-			shell(multiarch.templateArgs(meta, ['dpkgArch', 'prefixArm64']) + '''
+			shell(multiarch.templateArgs(meta, ['dpkgArch', 'gnuArch', 'prefixArm64']) + '''
 sed -i "s!^FROM !FROM $prefix/!" */Dockerfile.builder
 sed -ri "s!^base='.+'!base='$image:$prefix-'!; s! --pull ! !g" build.sh
 
@@ -68,6 +68,12 @@ case "$dpkgArch" in
 		rm -r uclibc
 		;;
 esac
+
+if [ -d uclibc ]; then
+	# if uclibc still exists, let's force a particular GNU arch for "host-gmp" (otherwise it fails on some arches)
+	sed -i 's!^RUN make -C /usr/src/buildroot !&HOST_GMP_CONF_OPTS="--build='"$gnuArch"'" !' uclibc/Dockerfile.builder
+fi
+
 (
 	set +x
 	for df in */Dockerfile.builder; do

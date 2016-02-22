@@ -27,6 +27,10 @@ for (arch in multiarch.allArches([
 		wrappers { colorizeOutput() }
 		steps {
 			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+# delete deprecated suites
+git ls-files --others --directory '*/' \\
+	| xargs --no-run-if-empty git clean -dfx
+
 echo "$dpkgArch" > arch
 echo "$repo" > repo
 ./update.sh

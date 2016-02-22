@@ -28,7 +28,9 @@ for (arch in multiarch.allArches([
 		steps {
 			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
 # delete deprecated suites
+# (piping to "cut" because "git clean" will not delete the directory itself if there's a trailing slash)
 git ls-files --others --directory '*/' \\
+	| cut -d/ -f1 \\
 	| xargs --no-run-if-empty git clean -dfx
 
 echo "$dpkgArch" > arch

@@ -27,19 +27,37 @@ fi
 
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
+(
+	set +x
+	for df in */*/Dockerfile; do
+		dir="$(dirname "$df")"
+		from="$(awk '$1 == "FROM" { print $2; exit }' "$df")"
+		if ! docker inspect "$from" &> /dev/null; then
+			echo >&2 "warning, '$from' does not exist; skipping $dir"
+			rm -r "$dir/"
+		fi
+	done
+)
+
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 
 for v in */; do
 	v="${v%/}"
 	docker build -t "$repo:$v" "$v"
-	docker build -t "$repo:$v-onbuild" "$v/onbuild"
-	docker build -t "$repo:$v-slim" "$v/slim"
-	docker build -t "$repo:$v-alpine" "$v/alpine"
+	variants=( onbuild slim alpine )
+	for variant in "${variants[@]}"; do
+		if [ -d "$v/$variant" ]; then
+			docker build -t "$repo:$v-$variant" "$v/$variant"
+		fi
+	done
 	if [ "$v" = "$latest" ]; then
 		docker tag -f "$repo:$v" "$repo"
-		docker tag -f "$repo:$v-onbuild" "$repo:onbuild"
-		docker tag -f "$repo:$v-slim" "$repo:slim"
-		docker tag -f "$repo:$v-alpine" "$repo:alpine"
+		for variant in "${variants[@]}"; do
+			from="$repo:$v-$variant"
+			if docker inspect "$from" &> /dev/null; then
+				docker tag -f "$from" "$repo:$variant"
+			fi
+		done
 	fi
 done
 ''' + multiarch.templatePush(meta))

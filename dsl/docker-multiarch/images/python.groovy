@@ -22,7 +22,7 @@ for (arch in multiarch.allArches()) {
 		steps {
 			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
 if [[ "$dpkgArch" == arm* ]]; then
-	rm -r 3.2 3.3
+	rm -r 3.3
 fi
 
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile

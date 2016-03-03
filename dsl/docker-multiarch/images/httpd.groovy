@@ -20,17 +20,17 @@ for (arch in multiarch.allArches()) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+			shell(multiarch.templateArgs(meta) + '''
 sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 
 for v in */; do
-        v="${v%/}"
-        docker build -t "$repo:$v" "$v"
-        if [ "$v" = "$latest" ]; then
-                docker tag -f "$repo:$v" "$repo"
-        fi
+	v="${v%/}"
+	docker build -t "$repo:$v" "$v"
+	if [ "$v" = "$latest" ]; then
+		docker tag -f "$repo:$v" "$repo"
+	fi
 done
 ''' + multiarch.templatePush(meta))
 		}

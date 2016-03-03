@@ -22,7 +22,7 @@ for (arch in multiarch.allArches()) {
 		steps {
 			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
 sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
-sed -i 's!amd64!$dpkgArch!g' */Dockerfile
+sed -i "s!amd64!$dpkgArch!g" */Dockerfile
 
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 

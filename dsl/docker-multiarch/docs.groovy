@@ -10,7 +10,9 @@ def images = [
 	'gcc',
 	'haproxy',
 	'hello-world',
+	'httpd',
 	'irssi',
+	'java',
 	'memcached',
 	'perl',
 	'php',
@@ -20,6 +22,7 @@ def images = [
 	'rakudo-star',
 	'redis',
 	'ruby',
+	'tomcat',
 	'ubuntu',
 	'wordpress'
 ]

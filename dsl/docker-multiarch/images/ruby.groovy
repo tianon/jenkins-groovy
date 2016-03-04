@@ -21,9 +21,6 @@ for (arch in multiarch.allArches()) {
 		wrappers { colorizeOutput() }
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
-# Ruby 2.0 sucks and needs to die (also, config.guess is outdated and Ruby 2.0 isn't worth hacking it to a newer version for IMO)
-rm -r 2.0
-
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"

@@ -1,7 +1,7 @@
 freeStyleJob('tianon-crank') {
 	disabled()
 	logRotator { daysToKeep(30) }
-	label('tianon')
+	label('tianon-nameless')
 	scm {
 		git {
 			remote { url('https://github.com/paultag/crank.git') }

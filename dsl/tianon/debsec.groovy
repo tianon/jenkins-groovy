@@ -1,6 +1,6 @@
 freeStyleJob('tianon-debian-security-mirror') {
 	logRotator { daysToKeep(30) }
-	label('tianon')
+	label('tianon-nameless')
 	scm {
 		git {
 			remote {

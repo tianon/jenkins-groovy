@@ -1,6 +1,6 @@
 freeStyleJob('tianon-jenkins') {
 	logRotator { numToKeep(5) }
-	label('tianon')
+	label('tianon-nameless')
 	scm {
 		git {
 			remote {

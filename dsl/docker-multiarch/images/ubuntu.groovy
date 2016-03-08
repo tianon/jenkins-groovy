@@ -2,7 +2,6 @@ import vars.multiarch
 
 for (arch in multiarch.allArches([
 	'armel', // unsupported; upstream considers the arch effectively dead
-	's390x', // unsupported; upstream doesn't consider the arch important
 ])) {
 	meta = multiarch.meta(getClass(), arch)
 

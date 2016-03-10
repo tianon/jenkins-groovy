@@ -5,7 +5,6 @@ def images = [
 		'testing',
 		'stable',
 		'oldstable',
-		'squeeze',
 	],
 	'ubuntu': [
 		'precise',

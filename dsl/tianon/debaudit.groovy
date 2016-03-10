@@ -20,28 +20,24 @@ def firehose = [
 	'ubuntu:devel', 'ubuntu:xenial',
 ]
 
-def imagesAxis = []
 images.each { repo, suites ->
-	suites.each { suite ->
-		imagesAxis << repo + ':' + suite
-	}
-}
-
-matrixJob('tianon-audit-deb-images') {
-	logRotator { daysToKeep(30) }
-	label('tianon')
-	triggers {
-		cron('H H/12 * * *')
-	}
-	axes {
-		labelExpression('build-host', 'tianon')
-		text('image', imagesAxis)
-	}
-	wrappers { colorizeOutput() }
-	steps {
-		shell("""\
+	matrixJob('tianon-audit-' + repo) {
+		logRotator { daysToKeep(30) }
+		label('tianon')
+		triggers {
+			cron('H H/12 * * *')
+		}
+		axes {
+			labelExpression('build-host', 'tianon')
+			text('suite', suites)
+		}
+		wrappers { colorizeOutput() }
+		steps {
+			shell("""\
 #!/bin/bash
 set -eo pipefail
+
+image="${repo}:\$suite"
 
 docker pull "\$image" > /dev/null
 
@@ -68,5 +64,6 @@ done
 
 [ ! -s temp ]
 """)
+		}
 	}
 }

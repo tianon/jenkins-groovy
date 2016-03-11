@@ -23,6 +23,7 @@ def images = [
 	'rakudo',
 	'redis',
 	'ruby',
+	'solr',
 	'tomcat',
 	'ubuntu',
 	'wordpress',

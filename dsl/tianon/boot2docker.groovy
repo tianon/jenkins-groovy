@@ -1,9 +1,10 @@
-for (type in ['ga', 'rc']) {
+for (releaseType in ['ga', 'rc']) {
 	script = '''\
 git-set-mtimes
 docker build -t boot2docker/boot2docker --pull .
 '''
-	switch (type) {
+
+	switch (releaseType) {
 		case 'ga':
 			script += '''\
 touch "version-$(< VERSION)"
@@ -11,6 +12,7 @@ touch "version-$(< VERSION)"
 docker run --rm boot2docker/boot2docker > boot2docker.iso
 '''
 			break
+
 		case 'rc':
 			script += '''\
 testDocker="$(curl -fsSL 'http://test.docker.com.s3.amazonaws.com/latest')"
@@ -41,9 +43,10 @@ EOD
 docker build -t boot2docker/boot2docker:test -f Dockerfile.test .
 docker run --rm boot2docker/boot2docker:test > boot2docker.iso
 '''
+			break
 	}
 
-	freeStyleJob('tianon-boot2docker-' + type) {
+	freeStyleJob('tianon-boot2docker-' + releaseType) {
 		logRotator { numToKeep(5) }
 		label('tianon-nameless')
 		scm {

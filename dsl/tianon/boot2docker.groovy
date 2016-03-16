@@ -1,12 +1,12 @@
 for (releaseType in ['ga', 'rc']) {
-	script = '''\
+	shellScript = '''\
 git-set-mtimes
 docker build -t boot2docker/boot2docker --pull .
 '''
 
 	switch (releaseType) {
 		case 'ga':
-			script += '''\
+			shellScript += '''\
 touch "version-$(< VERSION)"
 
 docker run --rm boot2docker/boot2docker > boot2docker.iso
@@ -14,7 +14,7 @@ docker run --rm boot2docker/boot2docker > boot2docker.iso
 			break
 
 		case 'rc':
-			script += '''\
+			shellScript += '''\
 testDocker="$(curl -fsSL 'http://test.docker.com.s3.amazonaws.com/latest')"
 testDockerSha256="$(curl -fsSL "http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-${testDocker}.sha256" | cut -d' ' -f1)"
 
@@ -63,7 +63,7 @@ docker run --rm boot2docker/boot2docker:test > boot2docker.iso
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(script)
+			shell(shellScript)
 		}
 		publishers {
 			archiveArtifacts {

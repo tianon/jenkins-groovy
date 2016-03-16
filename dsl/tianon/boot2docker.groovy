@@ -1,20 +1,22 @@
 for (releaseType in ['ga', 'rc']) {
-	shellScript = '''\
-git-set-mtimes
-docker build -t boot2docker/boot2docker --pull .
-'''
+	shellScript = ''
 
 	switch (releaseType) {
 		case 'ga':
-			shellScript += '''\
+			shellScript = '''\
+git-set-mtimes
+
 touch "version-$(< VERSION)"
 
+docker build -t boot2docker/boot2docker --pull .
 docker run --rm boot2docker/boot2docker > boot2docker.iso
 '''
 			break
 
 		case 'rc':
-			shellScript += '''\
+			shellScript = '''\
+git-set-mtimes
+
 testDocker="$(curl -fsSL 'http://test.docker.com.s3.amazonaws.com/latest')"
 testDockerSha256="$(curl -fsSL "http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-${testDocker}.sha256" | cut -d' ' -f1)"
 
@@ -40,6 +42,7 @@ RUN { echo; echo "  WARNING: this is a test.docker.com build, not a release."; e
 RUN /make_iso.sh
 EOD
 
+docker build -t boot2docker/boot2docker --pull .
 docker build -t boot2docker/boot2docker:test -f Dockerfile.test .
 docker run --rm boot2docker/boot2docker:test > boot2docker.iso
 '''

@@ -34,7 +34,7 @@ RUN set -x \\
 	&& chmod +x \\$ROOTFS/usr/local/bin/docker \\
 	&& \\$ROOTFS/usr/local/bin/docker -v
 
-RUN \\$ROOTFS/usr/local/bin/docker -v | sed -r 's/.* version ([^ ,]+).*/\1/' > \\$ROOTFS/etc/version \\
+RUN \\$ROOTFS/usr/local/bin/docker -v | sed -r 's/.* version ([^ ,]+).*/\\1/' > \\$ROOTFS/etc/version \\
 	&& cp -v \\$ROOTFS/etc/version /tmp/iso/version
 
 RUN { echo; echo "  WARNING: this is a test.docker.com build, not a release."; echo; } >> \\$ROOTFS/etc/motd

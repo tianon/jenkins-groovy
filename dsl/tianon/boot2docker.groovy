@@ -28,13 +28,13 @@ FROM boot2docker/boot2docker
 ENV TEST_DOCKER_VERSION ${testDocker}
 ENV TEST_DOCKER_SHA256 ${testDockerSha256}
 
-RUN set -x \
-	&& curl -fsSL http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-\\$TEST_DOCKER_VERSION -o \\$ROOTFS/usr/local/bin/docker \
-	&& echo "\\${TEST_DOCKER_SHA256} *\\$ROOTFS/usr/local/bin/docker" | sha256sum -c - \
-	&& chmod +x \\$ROOTFS/usr/local/bin/docker \
+RUN set -x \\
+	&& curl -fsSL http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-\\$TEST_DOCKER_VERSION -o \\$ROOTFS/usr/local/bin/docker \\
+	&& echo "\\${TEST_DOCKER_SHA256} *\\$ROOTFS/usr/local/bin/docker" | sha256sum -c - \\
+	&& chmod +x \\$ROOTFS/usr/local/bin/docker \\
 	&& \\$ROOTFS/usr/local/bin/docker -v
 
-RUN \\$ROOTFS/usr/local/bin/docker -v | sed -r 's/.* version ([^ ,]+).*/\1/' > \\$ROOTFS/etc/version \
+RUN \\$ROOTFS/usr/local/bin/docker -v | sed -r 's/.* version ([^ ,]+).*/\1/' > \\$ROOTFS/etc/version \\
 	&& cp -v \\$ROOTFS/etc/version /tmp/iso/version
 
 RUN { echo; echo "  WARNING: this is a test.docker.com build, not a release."; echo; } >> \\$ROOTFS/etc/motd

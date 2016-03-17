@@ -8,7 +8,9 @@ freeStyleJob('tianon-docker-master') {
 				credentials('tianon')
 			}
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

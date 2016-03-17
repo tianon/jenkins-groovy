@@ -8,7 +8,9 @@ freeStyleJob('tianon-jenkins') {
 				credentials('tianon')
 			}
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

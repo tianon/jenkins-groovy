@@ -6,7 +6,9 @@ freeStyleJob('apply-dsl') {
 		git {
 			remote { url('https://github.com/tianon/jenkins-groovy.git') }
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

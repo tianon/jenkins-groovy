@@ -5,7 +5,9 @@ freeStyleJob('official-images-docs-push') {
 		git {
 			remote { url('https://github.com/docker-library/docs.git') }
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

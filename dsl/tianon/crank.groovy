@@ -6,7 +6,9 @@ freeStyleJob('tianon-crank') {
 		git {
 			remote { url('https://github.com/paultag/crank.git') }
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

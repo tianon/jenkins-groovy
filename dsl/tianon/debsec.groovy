@@ -8,7 +8,9 @@ freeStyleJob('tianon-debian-security-mirror') {
 				credentials('tianon')
 			}
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

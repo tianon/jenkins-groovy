@@ -5,7 +5,9 @@ freeStyleJob('official-images-labeler') {
 		git {
 			remote { url('https://github.com/yosifkit/official-images-issue-labeler.git') }
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

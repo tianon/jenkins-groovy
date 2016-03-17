@@ -5,7 +5,9 @@ freeStyleJob('official-images-diff') {
 		git {
 			remote { url('https://github.com/docker-library/official-images.git') }
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

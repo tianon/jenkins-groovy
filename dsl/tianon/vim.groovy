@@ -15,7 +15,9 @@ freeStyleJob('tianon-vim-docker') {
 				refspec('+refs/heads/master:refs/remotes/tianon/master')
 			}
 			branches('docker/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

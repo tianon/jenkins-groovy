@@ -11,7 +11,9 @@ for (arch in multiarch.allArches()) {
 			git {
 				remote { url('https://github.com/perl/docker-perl.git') }
 				branches('*/master')
-				clean()
+				extensions {
+					cleanAfterCheckout()
+				}
 			}
 		}
 		triggers {

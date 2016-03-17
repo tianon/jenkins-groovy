@@ -9,7 +9,9 @@ freeStyleJob('official-images-docs-update') {
 				name('origin')
 			}
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 			configure { node ->
 				node / 'extensions' / 'hudson.plugins.git.extensions.impl.UserIdentity' {
 					delegate.name('Docker Library Bot')

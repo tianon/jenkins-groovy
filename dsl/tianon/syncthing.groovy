@@ -9,7 +9,9 @@ freeStyleJob('tianon-syncthing') {
 				name('origin')
 			}
 			branches('*/master')
-			clean()
+			extensions {
+				cleanAfterCheckout()
+			}
 		}
 	}
 	triggers {

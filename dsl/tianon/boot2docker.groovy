@@ -58,7 +58,9 @@ docker run --rm boot2docker/boot2docker:test > boot2docker.iso
 					url('https://github.com/boot2docker/boot2docker.git')
 				}
 				branches('*/master')
-				clean()
+				extensions {
+					cleanAfterCheckout()
+				}
 			}
 		}
 		triggers {

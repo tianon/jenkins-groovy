@@ -1,26 +1,24 @@
-for (releaseType in ['ga', 'rc']) {
-	shellScript = ''
-
-	switch (releaseType) {
-		case 'ga':
-			shellScript = '''\
+def releaseTypes = [
+	'tianon-boot2docker-ga': [
+		'description': 'Builds an official release-ready ISO of <a href="https://github.com/boot2docker/boot2docker/blob/master/VERSION">https://github.com/boot2docker/boot2docker/blob/master/VERSION</a>',
+		'shell': '''\
 git-set-mtimes
 
-touch "version-$(< VERSION)"
+touch "version-GA-$(< VERSION)"
 
 docker build -t boot2docker/boot2docker --pull .
 docker run --rm boot2docker/boot2docker > boot2docker.iso
-'''
-			break
-
-		case 'rc':
-			shellScript = '''\
+''',
+	],
+	'tianon-boot2docker-rc': [
+		'description': 'Builds an official RC-ready ISO of <a href="http://test.docker.com.s3.amazonaws.com/latest">http://test.docker.com.s3.amazonaws.com/latest</a>',
+		'shell': '''\
 git-set-mtimes
 
 testDocker="$(curl -fsSL 'http://test.docker.com.s3.amazonaws.com/latest')"
 testDockerSha256="$(curl -fsSL "http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-${testDocker}.sha256" | cut -d' ' -f1)"
 
-touch "version-$testDocker"
+touch "version-TEST-$testDocker"
 
 cat > Dockerfile.test <<EOD
 FROM boot2docker/boot2docker
@@ -45,11 +43,13 @@ EOD
 docker build -t boot2docker/boot2docker --pull .
 docker build -t boot2docker/boot2docker:test -f Dockerfile.test .
 docker run --rm boot2docker/boot2docker:test > boot2docker.iso
-'''
-			break
-	}
+''',
+	],
+]
 
-	freeStyleJob('tianon-boot2docker-' + releaseType) {
+for (releaseType in releaseTypes) {
+	freeStyleJob(releaseType.key) {
+		description(releaseType.value['description'])
 		logRotator { numToKeep(5) }
 		label('tianon-nameless')
 		scm {
@@ -68,7 +68,7 @@ docker run --rm boot2docker/boot2docker:test > boot2docker.iso
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(shellScript)
+			shell(releaseType.value['shell'])
 		}
 		publishers {
 			archiveArtifacts {

@@ -27,11 +27,11 @@ ENV TEST_DOCKER_VERSION ${testDocker}
 ENV TEST_DOCKER_SHA256 ${testDockerSha256}
 
 RUN set -x \\
-	&& curl -fsSL http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-\\$TEST_DOCKER_VERSION.tgz -o \\$ROOTFS/tmp/dockerbin.tgz \\
-	&& echo "\\${TEST_DOCKER_SHA256} *\\$ROOTFS/tmp/dockerbin.tgz" | sha256sum -c - \\
-	&& tar zxvf \\$ROOTFS/tmp/dockerbin.tgz -C \\$ROOTFS/ \\
-	&& rm \\$ROOTFS/tmp/dockerbin.tgz \\
-	&& \\$ROOTFS/usr/local/bin/docker -v
+	&& curl -fSL http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-\\$TEST_DOCKER_VERSION.tgz -o /tmp/dockerbin.tgz \\
+	&& echo "\\${TEST_DOCKER_SHA256} */tmp/dockerbin.tgz" | sha256sum -c - \\
+	&& tar -zxvf /tmp/dockerbin.tgz -C "\\$ROOTFS/usr/local/bin" --strip-components=1 \\
+	&& rm /tmp/dockerbin.tgz \\
+	&& chroot "\\$ROOTFS" docker -v
 
 RUN \\$ROOTFS/usr/local/bin/docker -v | sed -r 's/.* version ([^ ,]+).*/\\1/' > \\$ROOTFS/etc/version \\
 	&& cp -v \\$ROOTFS/etc/version /tmp/iso/version

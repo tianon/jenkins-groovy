@@ -17,6 +17,9 @@ freeStyleJob('official-images-diff') {
 	wrappers { colorizeOutput() }
 	steps {
 		shell('''\
+#!/bin/bash
+set -e
+
 _all() {
 	local nextPage='https://hub.docker.com/v2/repositories/library/?page_size=100'
 	while true; do

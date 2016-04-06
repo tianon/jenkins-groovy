@@ -17,12 +17,22 @@ freeStyleJob('official-images-diff') {
 	wrappers { colorizeOutput() }
 	steps {
 		shell("""\
+_all() {
+	local nextPage='https://hub.docker.com/v2/repositories/library/?page_size=100'
+	while true; do
+		local page="$(curl -fsSL "$nextPage")"
+
+		[ "$(echo "$page" | jq --raw-output '.results | length')" -gt 0 ] || break
+		echo "$page" | jq --raw-output '.results[].name'
+
+		nextPage="$(echo "$page" | jq --raw-output '.next')"
+		[ "$nextPage" != 'null' ] || break
+	done
+}
+
 diff -u \\
-	<({ echo scratch; ls -1 library; } \\
-		| sort) \\
-	<(curl -fsSL 'https://hub.docker.com/v2/repositories/library/?page_size=1000&page=1' \\
-		| jq --raw-output '.results[].name' \\
-		| sort)
+	<({ echo scratch; ls -1 library; } | sort) \\
+	<(_all | sort)
 """)
 	}
 }

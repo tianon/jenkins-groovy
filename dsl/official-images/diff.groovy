@@ -16,7 +16,7 @@ freeStyleJob('official-images-diff') {
 	}
 	wrappers { colorizeOutput() }
 	steps {
-		shell("""\
+		shell('''\
 _all() {
 	local nextPage='https://hub.docker.com/v2/repositories/library/?page_size=100'
 	while true; do
@@ -33,6 +33,6 @@ _all() {
 diff -u \\
 	<({ echo scratch; ls -1 library; } | sort) \\
 	<(_all | sort)
-""")
+''')
 	}
 }

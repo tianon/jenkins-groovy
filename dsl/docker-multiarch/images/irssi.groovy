@@ -23,11 +23,32 @@ for (arch in multiarch.allArches()) {
 		wrappers { colorizeOutput() }
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
-sed -i "s!^FROM !FROM $prefix/!" Dockerfile
+sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
-docker build -t "$repo" .
-version="$(awk '$1 == "ENV" && $2 == "IRSSI_VERSION" { print $3; exit }' Dockerfile)"
-docker tag -f "$repo" "$repo:$version"
+(
+	set +x
+	for df in */Dockerfile; do
+		dir="$(dirname "$df")"
+		from="$(awk '$1 == "FROM" { print $2; exit }' "$df")"
+		if ! docker inspect "$from" &> /dev/null; then
+			echo >&2 "warning, '$from' does not exist; skipping $dir"
+			rm -r "$dir/"
+		fi
+	done
+)
+
+latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
+
+for variant in */; do
+	variant="${variant%/}"
+	docker build -t "$repo:$variant" "$variant"
+	version="$(awk '$1 == "ENV" && $2 == "IRSSI_VERSION" { print $3; exit }' "$variant/Dockerfile")"
+	docker tag -f "$repo:$variant" "$repo:$version-$variant"
+	if [ "$variant" = "$latest" ]; then
+		docker tag -f "$repo:$variant" "$repo"
+		docker tag -f "$repo:$version-$variant" "$repo:$version"
+	fi
+done
 ''' + multiarch.templatePush(meta))
 		}
 	}

@@ -30,7 +30,10 @@ latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exi
 
 for v in */; do
 	v="${v%/}"
-	docker build -t "$repo:$v" "$v"
+	if ! docker build -t "$repo:$v" "$v"; then
+		echo >&2 "warning: building '$v' failed; skipping"
+		continue
+	fi
 	if [ "$v" = "$latest" ]; then
 		docker tag -f "$repo:$v" "$repo"
 	fi

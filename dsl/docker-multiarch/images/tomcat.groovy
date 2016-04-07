@@ -23,16 +23,23 @@ for (arch in multiarch.allArches()) {
 		wrappers { colorizeOutput() }
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
-sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
+sed -i "s!^FROM !FROM $prefix/!" */*/Dockerfile
 
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 
 for v in */; do
 	v="${v%/}"
-	docker build -t "$repo:$v" "$v"
-	if [ "$v" = "$latest" ]; then
-		docker tag -f "$repo:$v" "$repo"
-	fi
+	latestV="$(./generate-stackbrew-library.sh | awk '$1 == "'"$v"':" { print $3; exit }')"
+	for variant in "$v"/*/; do
+		variant="$(basename "$variant")"
+		docker build -t "$repo:$v-$variant" "$v"
+		if [ "$v/$variant" = "$latestV" ]; then
+			docker tag -f "$repo:$v-$variant" "$repo:$v"
+		fi
+		if [ "$v/$variant" = "$latest" ]; then
+			docker tag -f "$repo:$v-$variant" "$repo"
+		fi
+	done
 done
 ''' + multiarch.templatePush(meta))
 		}

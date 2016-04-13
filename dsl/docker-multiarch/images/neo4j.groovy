@@ -11,7 +11,9 @@ for (arch in multiarch.allArches()) {
 			git {
 				remote { url('https://github.com/neo4j/docker-neo4j.git') }
 				branches('*/master')
-				clean()
+				extensions {
+					cleanAfterCheckout()
+				}
 			}
 		}
 		triggers {

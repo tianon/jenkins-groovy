@@ -11,7 +11,9 @@ for (arch in multiarch.allArches()) {
 			git {
 				remote { url('https://github.com/carlossg/docker-maven.git') }
 				branches('*/master')
-				clean()
+				extensions {
+					cleanAfterCheckout()
+				}
 			}
 		}
 		triggers {
@@ -22,6 +24,7 @@ for (arch in multiarch.allArches()) {
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
 rm -rf tests
+
 sed -i "s!^FROM !FROM $prefix/!" */{*/}Dockerfile
 
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"

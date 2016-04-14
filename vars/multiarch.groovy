@@ -73,7 +73,7 @@ def static archBits(arch) {
 def static meta(cls, arch) {
 	def image = image(cls.name)
 	def prefix = prefix(arch)
-	return [
+	def meta = [
 		'name': "docker-${arch}-${cls.name}",
 		'description': """<a href="https://hub.docker.com/r/${prefix}/${image}/" target="_blank">Docker Hub page (<code>${prefix}/${image}</code>)</a>""",
 		'label': "docker-${arch}",
@@ -84,6 +84,11 @@ def static meta(cls, arch) {
 		'gnuArch': gnuArch(arch),
 		'archBits': archBits(arch),
 	]
+	if (arch == 's390x' && cls.name == 'ubuntu') {
+		// we have an explicit "Ubuntu" node for s390x now
+		meta.label += '-ubuntu'
+	}
+	return meta
 }
 
 def static templateArgs(meta, extra = [], std = ['prefix', 'image', 'repo']) {

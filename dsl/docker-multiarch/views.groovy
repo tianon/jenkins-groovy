@@ -61,6 +61,7 @@ nestedView('docker-multiarch') {
 	views {
 		myView(delegate.&listView, '-all', 'docker-.*')
 		myView(delegate.&listView, '-docs', 'docker-.*-docs')
+		myView(delegate.&listView, '-meta', 'docker-multiarch-.*')
 		nestedView('arches') {
 			filterBuildQueue()
 			filterExecutors()

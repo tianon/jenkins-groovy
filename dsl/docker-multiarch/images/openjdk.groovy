@@ -34,6 +34,7 @@ for v in */; do
 		echo >&2 "warning: building '$v' failed; skipping"
 		continue
 	fi
+	docker tag -f "$repo:$v" "$repo:openjdk-$v"
 	if [ "$v" = "$latest" ]; then
 		docker tag -f "$repo:$v" "$repo"
 	fi

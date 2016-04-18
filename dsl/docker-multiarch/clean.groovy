@@ -7,11 +7,7 @@ matrixJob('docker-multiarch-clean') {
 		cron('H H/12 * * *')
 	}
 	axes {
-		label('host', multiarch.allArches([
-			// these run on arm64 (no dedicated worker hosts)
-			'armel',
-			'armhf',
-		]).collect { "docker-${it}" })
+		label('host', multiarch.allNodes())
 	}
 	wrappers { colorizeOutput() }
 	steps {

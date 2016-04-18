@@ -11,6 +11,16 @@ def static allArches(blacklist = []) {
 	] - blacklist
 }
 
+def static allNodes(blacklist = []) {
+	allArches([
+		// run on arm64 (no dedicated worker)
+		'armel',
+	]).collect { "docker-${it}" } + [
+		// extra node responsible for just building Ubuntu
+		'docker-s390x-ubuntu',
+	] - blacklist
+}
+
 def static optional(list, key, fallback = key) {
 	return list.containsKey(key) ? list[key] : fallback
 }

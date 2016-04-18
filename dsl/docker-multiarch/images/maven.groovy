@@ -32,10 +32,10 @@ latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exi
 for v in */; do
 	v="${v%/}"
 	docker build -t "$repo:$v" "$v"
-	docker build -t "$repo:$v-onbuild" "$v/onbuild"
+	#docker build -t "$repo:$v-onbuild" "$v/onbuild"
 	if [ "$v" = "$latest" ]; then
 		docker tag -f "$repo:$v" "$repo"
-		docker tag -f "$repo:$v-onbuild" "$repo:onbuild"
+		#docker tag -f "$repo:$v-onbuild" "$repo:onbuild"
 	fi
 done
 ''' + multiarch.templatePush(meta))

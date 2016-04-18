@@ -23,9 +23,9 @@ for (arch in multiarch.allArches()) {
 		wrappers { colorizeOutput() }
 		steps {
 			shell(multiarch.templateArgs(meta) + '''
-rm -rf docs
+rm -rf docs scripts
 
-sed -i "s!^FROM +!FROM $prefix/!" */Dockerfile
+sed -ri "s!^FROM +!FROM $prefix/!" */Dockerfile
 
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 

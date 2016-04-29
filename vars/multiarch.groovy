@@ -17,7 +17,7 @@ def static allNodes(blacklist = []) {
 		'armel',
 	]).collect { "docker-${it}" } + [
 		// extra node responsible for just building Ubuntu
-		'docker-s390x-ubuntu',
+		//'docker-s390x-ubuntu', // thanks to new s390x node, no longer necessary!
 	] - blacklist
 }
 
@@ -94,10 +94,11 @@ def static meta(cls, arch) {
 		'gnuArch': gnuArch(arch),
 		'archBits': archBits(arch),
 	]
-	if (arch == 's390x' && cls.name == 'ubuntu') {
-		// we have an explicit "Ubuntu" node for s390x now
-		meta.label += '-ubuntu'
-	}
+	// thanks to new s390x node, no longer necessary!
+	//if (arch == 's390x' && cls.name == 'ubuntu') {
+	//	// we have an explicit "Ubuntu" node for s390x now
+	//	meta.label += '-ubuntu'
+	//}
 	return meta
 }
 

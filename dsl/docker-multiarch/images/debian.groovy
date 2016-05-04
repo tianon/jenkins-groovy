@@ -13,9 +13,13 @@ def suites = [
 	],
 	'wheezy': [
 		'alias': 'oldstable',
-		'unsupported': [
-			'arm64',
-			'ppc64le',
+		'supported': [
+			// thanks to LTS, no more wheezy except on these arches
+			// http://security.debian.org/dists/wheezy/updates/main/
+			'amd64',
+			'armel',
+			'armhf',
+			'i386',
 		],
 	],
 ]
@@ -29,6 +33,9 @@ for (arch in multiarch.allArches()) {
 
 	archSuites = []
 	for (suite in suites) {
+		if (suite.value.containsKey('supported') && !suite.value['supported'].contains(arch)) {
+			continue
+		}
 		if (suite.value.containsKey('unsupported') && suite.value['unsupported'].contains(arch)) {
 			continue
 		}

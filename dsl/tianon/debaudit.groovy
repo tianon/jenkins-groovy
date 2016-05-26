@@ -17,7 +17,7 @@ def images = [
 def firehose = [
 	'debian:unstable', 'debian:sid',
 	'debian:testing', 'debian:stretch',
-	'ubuntu:devel', 'ubuntu:xenial',
+	'ubuntu:devel', 'ubuntu:yakkety',
 ]
 
 images.each { repo, suites ->

@@ -34,7 +34,17 @@ _all() {
 }
 
 diff -u \\
-	<({ echo scratch; ls -1 library; } | sort) \\
+	<({
+		ls -1 library
+
+		# "scratch" is a special case, but exists on Docker Hub for older Docker to pull
+		echo scratch
+
+		# deprecated and removed repos
+		echo docker-dev
+		echo ubuntu-deboostrap
+		echo ubuntu-upstart
+	} | sort) \\
 	<(_all | sort)
 ''')
 	}

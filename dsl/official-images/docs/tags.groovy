@@ -25,18 +25,19 @@ freeStyleJob('official-images-docs-tag-details') {
 	}
 	wrappers { colorizeOutput() }
 	steps {
-		shell("""\
+		shell('''\
 # get "bashbrew" from master
 curl -fSL 'https://github.com/docker-library/official-images/archive/master.tar.gz' \\
 	| tar -xz
 mkdir official-images-master/bin
 ln -s ../bashbrew/bashbrew.sh official-images-master/bin/bashbrew
-export PATH="\$PWD/official-images-master/bin:\$PATH"
+export PATH="$PWD/official-images-master/bin:$PATH"
+export BASHBREW_LIBRARY="$PWD/official-images-master/library"
 
 ./update-tag-details.sh
 git add */tag-details.md || true
 git commit -m 'Run update-tag-details.sh' || true
-""")
+''')
 	}
 	publishers {
 		git {

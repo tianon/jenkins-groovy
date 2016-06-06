@@ -42,7 +42,7 @@ diff -u \\
 
 		# deprecated and removed repos
 		echo docker-dev
-		echo ubuntu-deboostrap
+		echo ubuntu-debootstrap
 		echo ubuntu-upstart
 	} | sort) \\
 	<(_all | sort)

@@ -40,8 +40,8 @@ git push origin HEAD:master || true
 
 ./push.sh
 
-docker tag -f tianon/syncthing:cli tianon/syncthing-cli
-docker tag -f tianon/syncthing:inotify tianon/syncthing-inotify
+docker tag tianon/syncthing:cli tianon/syncthing-cli
+docker tag tianon/syncthing:inotify tianon/syncthing-inotify
 
 docker push tianon/syncthing-cli
 docker push tianon/syncthing-inotify

@@ -19,25 +19,25 @@ freeStyleJob('tianon-jenkins') {
 	}
 	wrappers { colorizeOutput() }
 	steps {
-		shell("""\
+		shell('''\
 cd jenkins
 
 ./update.sh
 
 docker build --pull -t tianon/jenkins .
 
-jenkinsVersion="\$(awk '
-	\$1 == "ENV" && \$2 == "JENKINS_VERSION" {
-		print \$3;
+jenkinsVersion="$(awk '
+	$1 == "ENV" && $2 == "JENKINS_VERSION" {
+		print $3
 	}
 ' Dockerfile)"
 
-git commit -m "Update jenkins to \$jenkinsVersion" -- Dockerfile || true
+git commit -m "Update jenkins to $jenkinsVersion" -- Dockerfile || true
 
-docker tag -f tianon/jenkins "tianon/jenkins:\$jenkinsVersion"
-docker push "tianon/jenkins:\$jenkinsVersion"
+docker tag tianon/jenkins "tianon/jenkins:$jenkinsVersion"
+docker push "tianon/jenkins:$jenkinsVersion"
 docker push tianon/jenkins
-""")
+''')
 	}
 	publishers {
 		git {

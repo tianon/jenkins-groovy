@@ -6,7 +6,7 @@ git-set-mtimes
 
 dockerVersion="$(< VERSION)"
 
-touch "version-GA-$dockerVersion"
+git log -1 > "version-GA-$dockerVersion"
 
 docker build -t boot2docker/boot2docker --pull .
 docker run --rm boot2docker/boot2docker > boot2docker.iso
@@ -20,7 +20,7 @@ git-set-mtimes
 dockerVersion="$(curl -fsSL 'http://test.docker.com.s3.amazonaws.com/latest')"
 testDockerSha256="$(curl -fsSL "http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-${dockerVersion}.tgz.sha256" | cut -d' ' -f1)"
 
-touch "version-TEST-$dockerVersion"
+git log -1 > "version-TEST-$dockerVersion"
 
 cat > Dockerfile.test <<EOD
 FROM boot2docker/boot2docker

@@ -36,7 +36,7 @@ git commit -m "Update jenkins to $jenkinsVersion" -- Dockerfile || true
 
 docker tag tianon/jenkins "tianon/jenkins:$jenkinsVersion"
 docker push "tianon/jenkins:$jenkinsVersion"
-docker push tianon/jenkins
+docker push tianon/jenkins:latest
 ''')
 	}
 	publishers {

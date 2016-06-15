@@ -104,7 +104,7 @@ for (releaseType in releaseTypes) {
 		publishers {
 			archiveArtifacts {
 				fingerprint()
-				pattern('boot2docker.iso')
+				pattern('boot2docker*.iso')
 				pattern('version-*')
 			}
 		}

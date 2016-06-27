@@ -39,7 +39,7 @@ case "$dpkgArch" in
 		sed -i 's!linux64!linux-armhf-raring!g' */{,*/}Dockerfile
 		;;
 	i386)
-		sed -i 's!linux64!linux!g' */{,*/}Dockerfile
+		sed -i 's!linux64!linux32!g' */{,*/}Dockerfile
 		;;
 	ppc64el)
 		sed -i 's!linux64!ppc64le!g' */{,*/}Dockerfile

@@ -89,6 +89,7 @@ def static meta(cls, arch) {
 		'label': "docker-${arch}",
 		'prefix': prefix,
 		'image': image,
+		'arch': arch,
 		'dpkgArch': dpkgArch(arch),
 		'apkArch': apkArch(arch),
 		'gnuArch': gnuArch(arch),

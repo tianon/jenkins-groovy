@@ -22,12 +22,16 @@ for (arch in multiarch.allArches()) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
+			shell(multiarch.templateArgs(meta, ['dpkgArch', 'gnuArch']) + '''
 if [[ "$dpkgArch" == arm* ]]; then
 	rm -r 3.3
 fi
 
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
+
+# explicitly set the gcc arch tuple to the arch of gcc from the build environment
+# (this makes sure our armhf build on arm64 hardware builds an armhf python)
+sed -i "s!/configure !/configure --build='$gnuArch' !g" */{,*/}Dockerfile
 
 (
 	set +x

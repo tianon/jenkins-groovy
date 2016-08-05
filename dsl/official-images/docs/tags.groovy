@@ -4,7 +4,7 @@ freeStyleJob('official-images-docs-tag-details') {
 	scm {
 		git {
 			remote {
-				url('git@github.com:docker-library/docs.git')
+				url('git@github.com:docker-library/repo-info.git')
 				credentials('docker-library-bot')
 				name('origin')
 			}
@@ -35,7 +35,7 @@ export PATH="$PWD/official-images-master/bin:$PATH"
 export BASHBREW_LIBRARY="$PWD/official-images-master/library"
 
 ./update-tag-details.sh
-git add */tag-details.md || true
+git add repos/*/tag-details.md || true
 git commit -m 'Run update-tag-details.sh' || true
 ''')
 	}

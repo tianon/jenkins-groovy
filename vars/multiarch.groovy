@@ -29,7 +29,7 @@ def static image(clsName) {
 	return optional([
 		'buildpack': 'buildpack-deps',
 		'hello': 'hello-world',
-		'openjdk': 'java',
+		//'openjdk': 'java',
 		'r': 'r-base',
 		'rakudo': 'rakudo-star',
 	], clsName)

@@ -87,12 +87,16 @@ for options in "${optionsFiles[@]}"; do
 		cd "$dir"
 		
 		chmod +x mkimage-alpine.bash
-		sudo PATH="$PATH" \\
-			./mkimage-alpine.bash "${BUILD_OPTIONS[@]}"
-		for tag in "${TAGS[@]}"; do
-			[[ "$tag" == "$image":* ]]
-			docker build -t "$prefix/$tag" .
-		done
+		# wrapped up in an "if" because armhf "edge" apk seems to be segfaulting (and we don't want that to block stable updates)
+		if \\
+			sudo PATH="$PATH" \\
+				./mkimage-alpine.bash "${BUILD_OPTIONS[@]}" \\
+		; then
+			for tag in "${TAGS[@]}"; do
+				[[ "$tag" == "$image":* ]]
+				docker build -t "$prefix/$tag" .
+			done
+		fi
 	)
 done
 ''' + multiarch.templatePush(meta))

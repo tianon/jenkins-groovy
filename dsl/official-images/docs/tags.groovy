@@ -41,7 +41,7 @@ git commit -m 'Run update-tag-details.sh' || true
 # try catching up since this job takes so long to run
 git checkout -- .
 git clean -dfx .
-git pull --rebase origin master || true
+git pull --rebase https://github.com/docker-library/repo-info.git master || true
 ''')
 	}
 	publishers {

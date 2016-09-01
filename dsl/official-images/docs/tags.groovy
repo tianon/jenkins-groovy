@@ -34,9 +34,9 @@ ln -s ../bashbrew/bashbrew.sh official-images-master/bin/bashbrew
 export PATH="$PWD/official-images-master/bin:$PATH"
 export BASHBREW_LIBRARY="$PWD/official-images-master/library"
 
-./update-tag-details.sh
+./update-remote.sh
 git add repos/*/tag-details.md || true
-git commit -m 'Run update-tag-details.sh' || true
+git commit -m 'Run update-remote.sh' || true
 
 # try catching up since this job takes so long to run
 git checkout -- .

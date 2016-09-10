@@ -7,7 +7,6 @@ matrixJob('tianon-apt-cacher-maint') {
 	axes {
 		label('host',
 			'tianon-nameless',
-			'tianon-viper',
 			'yosifkit-minas-morgul',
 		)
 	}

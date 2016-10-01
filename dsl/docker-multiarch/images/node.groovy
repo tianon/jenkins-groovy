@@ -28,7 +28,7 @@ for (arch in multiarch.allArches([
 			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
 fromArch='linux-x64'
 case "$dpkgArch" in
-	amd64)   toArch='linux-arm64' ;;
+	arm64)   toArch='linux-arm64' ;;
 	armhf)   toArch='linux-armv7l' ;;
 	i386)    toArch='linux-x86' ;;
 	ppc64el) toArch='linux-ppc64le' ;;

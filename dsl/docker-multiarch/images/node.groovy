@@ -51,9 +51,14 @@ for v in */; do
 	[ -n "$fullVersion" ]
 	url="https://nodejs.org/dist/v${fullVersion}/node-v${fullVersion}-${toArch}.tar.xz"
 	if ! wget --spider --quiet "$url"; then
-		echo >&2
-		echo >&2 "warning: $url not found, skipping $v"
-		echo >&2
+		cat >&2 <<-EOF
+
+
+			warning: skipping $v
+			    $url not found
+
+
+		EOF
 		continue
 	fi
 	docker build -t "$repo:$v" "$v"
@@ -66,6 +71,10 @@ for v in */; do
 		docker tag -f "$repo:$v-slim" "$repo:slim"
 		docker tag -f "$repo:$v-wheezy" "$repo:wheezy"
 	fi
+	docker tag -f "$repo:$v" "$repo:$fullVersion"
+	docker tag -f "$repo:$v-onbuild" "$repo:$fullVersion-onbuild"
+	docker tag -f "$repo:$v-slim" "$repo:$fullVersion-slim"
+	docker tag -f "$repo:$v-wheezy" "$repo:$fullVersion-wheezy"
 done
 ''' + multiarch.templatePush(meta))
 		}

@@ -42,6 +42,25 @@ esac
 sed -i "s!$fromArch!$toArch!g" */{,*/}Dockerfile
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
+(
+	for df in */{,*/}Dockerfile; do
+		dir="$(dirname "$df")"
+		from="$(awk -F '[[:space:]]+' '$1 == "FROM" { print $2; exit }' "$df")"
+		if ! docker inspect "$from" &> /dev/null; then
+			cat >&2 <<-EOF
+
+
+				warning: '$from' does not exist
+				    skipping $dir
+
+
+			EOF
+			echo >&2 "warning, '$from' does not exist; skipping $dir"
+			rm -r "$dir/"
+		fi
+	done
+)
+
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 
 for v in */; do
@@ -54,8 +73,8 @@ for v in */; do
 		cat >&2 <<-EOF
 
 
-			warning: skipping $v
-			    $url not found
+			warning: $url not found
+			    skipping $v
 
 
 		EOF

@@ -28,20 +28,13 @@ for (arch in multiarch.allArches([
 			shell(multiarch.templateArgs(meta, ['dpkgArch']) + '''
 fromArch='linux-x64'
 case "$dpkgArch" in
-	armhf)
-		toArch='linux-armv7l'
-		;;
-	i386)
-		toArch='linux-x86'
-		;;
-	ppc64el)
-		toArch='linux-ppc64le'
-		;;
-	s390x)
-		toArch='linux-s390x'
-		;;
+	amd64)   toArch='linux-arm64' ;;
+	armhf)   toArch='linux-armv7l' ;;
+	i386)    toArch='linux-x86' ;;
+	ppc64el) toArch='linux-ppc64le' ;;
+	s390x)   toArch='linux-s390x' ;;
 	*)
-		echo >&2 "unsupported architecture: $prefix"
+		echo >&2 "unsupported architecture: $dpkgArch ($prefix)"
 		exit 1
 		;;
 esac

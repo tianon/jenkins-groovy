@@ -62,19 +62,19 @@ for v in */; do
 		continue
 	fi
 	docker build -t "$repo:$v" "$v"
+	docker tag -f "$repo:$v" "$repo:$fullVersion"
 	docker build -t "$repo:$v-onbuild" "$v/onbuild"
+	docker tag -f "$repo:$v-onbuild" "$repo:$fullVersion-onbuild"
 	docker build -t "$repo:$v-slim" "$v/slim"
+	docker tag -f "$repo:$v-slim" "$repo:$fullVersion-slim"
 	docker build -t "$repo:$v-wheezy" "$v/wheezy"
+	docker tag -f "$repo:$v-wheezy" "$repo:$fullVersion-wheezy"
 	if [ "$v" = "$latest" ]; then
 		docker tag -f "$repo:$v" "$repo"
 		docker tag -f "$repo:$v-onbuild" "$repo:onbuild"
 		docker tag -f "$repo:$v-slim" "$repo:slim"
 		docker tag -f "$repo:$v-wheezy" "$repo:wheezy"
 	fi
-	docker tag -f "$repo:$v" "$repo:$fullVersion"
-	docker tag -f "$repo:$v-onbuild" "$repo:$fullVersion-onbuild"
-	docker tag -f "$repo:$v-slim" "$repo:$fullVersion-slim"
-	docker tag -f "$repo:$v-wheezy" "$repo:$fullVersion-wheezy"
 done
 ''' + multiarch.templatePush(meta))
 		}

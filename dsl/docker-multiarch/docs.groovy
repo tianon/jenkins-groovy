@@ -16,6 +16,7 @@ def images = [
 	'maven',
 	'memcached',
 	'neo4j',
+	'node',
 	'perl',
 	'php',
 	'pypy',
@@ -27,7 +28,7 @@ def images = [
 	'solr',
 	'tomcat',
 	'ubuntu',
-	'wordpress'
+	'wordpress',
 ]
 
 for (arch in multiarch.allArches()) {

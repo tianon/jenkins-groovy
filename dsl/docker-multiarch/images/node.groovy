@@ -47,6 +47,15 @@ latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exi
 for v in */; do
 	v="${v%/}"
 	[ -f "$v/Dockerfile" ] || continue
+	fullVersion="$(awk -F '[[:space:]]+' '$1 == "ENV" && $2 == "NODE_VERSION" { print $3; exit }')"
+	[ -n "$fullVersion" ]
+	url="https://nodejs.org/dist/v${fullVersion}/node-v${fullVersion}-${toArch}.tar.xz"
+	if ! wget --spider --quiet "$url"; then
+		echo >&2
+		echo >&2 "warning: $url not found, skipping $v"
+		echo >&2
+		continue
+	fi
 	docker build -t "$repo:$v" "$v"
 	docker build -t "$repo:$v-onbuild" "$v/onbuild"
 	docker build -t "$repo:$v-slim" "$v/slim"

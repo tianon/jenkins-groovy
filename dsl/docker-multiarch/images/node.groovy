@@ -47,7 +47,7 @@ latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exi
 for v in */; do
 	v="${v%/}"
 	[ -f "$v/Dockerfile" ] || continue
-	fullVersion="$(awk -F '[[:space:]]+' '$1 == "ENV" && $2 == "NODE_VERSION" { print $3; exit }')"
+	fullVersion="$(awk -F '[[:space:]]+' '$1 == "ENV" && $2 == "NODE_VERSION" { print $3; exit }' "$v/Dockerfile")"
 	[ -n "$fullVersion" ]
 	url="https://nodejs.org/dist/v${fullVersion}/node-v${fullVersion}-${toArch}.tar.xz"
 	if ! wget --spider --quiet "$url"; then

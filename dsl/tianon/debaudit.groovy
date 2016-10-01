@@ -9,8 +9,8 @@ def images = [
 	'ubuntu': [
 		'precise',
 		'trusty',
-		'wily',
 		'xenial',
+		'yakkety',
 	],
 ]
 

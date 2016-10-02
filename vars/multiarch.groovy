@@ -48,9 +48,10 @@ def static dpkgArch(arch) {
 }
 
 def static apkArch(arch) {
-	// Alpine only officially supports armhf, x86, x86_64
+	// Alpine only officially supports aarch64 (as of 3.5+), armhf, x86, x86_64
 	return optional([
 		'amd64': 'x86_64',
+		'arm64': 'aarch64',
 		'armhf': 'armhf',
 		'i386': 'x86',
 	], arch, null)

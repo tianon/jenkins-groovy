@@ -48,14 +48,27 @@ for options in "${optionsFiles[@]}"; do
 		source "$options"
 		: "${RELEASE:?}" "${MIRROR:?}"
 		
+		apkIndexUrl="$MIRROR/$RELEASE/main/$apkArch/APKINDEX.tar.gz"
+		if ! wget --quiet --spider "$apkIndexUrl"; then
+			cat >&2 <<-EOF
+
+
+				warning: $apkIndexUrl does not exist
+				    skipping $options ($RELEASE)
+
+
+			EOF
+			continue
+		fi
+		
 		mkdir "apk-tools-$RELEASE"
 		cd "apk-tools-$RELEASE"
-		curl -fSL "$MIRROR/$RELEASE/main/$apkArch/APKINDEX.tar.gz" \\
+		wget -O- "$apkIndexUrl" \\
 			| tar -xvz
 		get_package() {
 			local pkg="$1"
 			local ver="$(awk -F: '$1 == "P" { pkg = $2 } pkg == "'"$pkg"'" && $1 == "V" { print $2 }' APKINDEX)"
-			curl -fSL "$MIRROR/$RELEASE/main/$apkArch/$pkg-$ver.apk" \\
+			wget -O- "$MIRROR/$RELEASE/main/$apkArch/$pkg-$ver.apk" \\
 				| tar -xvz
 		}
 		get_package alpine-keys
@@ -79,6 +92,7 @@ for options in "${optionsFiles[@]}"; do
 		
 		# put "apk" in the PATH
 		apkTools="$PWD/apk-tools-$RELEASE"
+		[ -d "$apkTools" ] || continue
 		export PATH="$PATH:$apkTools/sbin"
 		
 		# adjust the script to look for /etc/apk/keys in the correct place

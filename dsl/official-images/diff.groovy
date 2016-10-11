@@ -42,6 +42,7 @@ diff -u \\
 
 		# deprecated and removed repos
 		echo docker-dev
+		echo glassfish
 		echo ubuntu-debootstrap
 		echo ubuntu-upstart
 	} | sort) \\

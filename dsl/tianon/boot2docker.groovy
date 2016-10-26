@@ -10,6 +10,10 @@ git log -1 > "version-GA-$dockerVersion"
 
 docker build -t boot2docker/boot2docker --pull .
 docker run --rm boot2docker/boot2docker > boot2docker.iso
+
+docker push boot2docker/boot2docker:latest
+docker tag boot2docker/boot2docker:latest "boot2docker/boot2docker:$dockerVersion"
+docker push "boot2docker/boot2docker:$dockerVersion"
 ''',
 	],
 	'tianon-boot2docker-rc': [
@@ -45,6 +49,11 @@ EOD
 docker build -t boot2docker/boot2docker --pull .
 docker build -t boot2docker/boot2docker:test -f Dockerfile.test .
 docker run --rm boot2docker/boot2docker:test > boot2docker.iso
+
+docker push boot2docker/boot2docker:latest
+docker push boot2docker/boot2docker:test
+docker tag boot2docker/boot2docker:test "boot2docker/boot2docker:$dockerVersion"
+docker push "boot2docker/boot2docker:$dockerVersion"
 
 # build "boot2docker-experimental.iso" from our new "boot2docker/boot2docker:test" image
 sed -ri 's!^FROM .*$!FROM boot2docker/boot2docker:test!' Dockerfile.experimental

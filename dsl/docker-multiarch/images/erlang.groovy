@@ -46,9 +46,9 @@ for v in */; do
 	docker build -t "$repo:$v-onbuild" "$v/onbuild"
 	docker build -t "$repo:$v-slim" "$v/slim"
 	if [ "$v" = "$latest" ]; then
-		docker tag -f "$repo:$v" "$repo"
-		docker tag -f "$repo:$v-onbuild" "$repo:onbuild"
-		docker tag -f "$repo:$v-slim" "$repo:slim"
+		docker tag "$repo:$v" "$repo"
+		docker tag "$repo:$v-onbuild" "$repo:onbuild"
+		docker tag "$repo:$v-slim" "$repo:slim"
 	fi
 done
 ''' + multiarch.templatePush(meta))

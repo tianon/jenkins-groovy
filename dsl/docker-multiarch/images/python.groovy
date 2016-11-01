@@ -57,11 +57,11 @@ for v in */; do
 		fi
 	done
 	if [ "$v" = "$latest" ]; then
-		docker tag -f "$repo:$v" "$repo"
+		docker tag "$repo:$v" "$repo"
 		for variant in "${variants[@]}"; do
 			from="$repo:$v-$variant"
 			if docker inspect "$from" &> /dev/null; then
-				docker tag -f "$from" "$repo:$variant"
+				docker tag "$from" "$repo:$variant"
 			fi
 		done
 	fi

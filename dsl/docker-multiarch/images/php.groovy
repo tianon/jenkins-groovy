@@ -38,14 +38,14 @@ latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exi
 for v in */; do
 	v="${v%/}"
 	docker build -t "$repo:$v" "$v"
-	docker tag -f "$repo:$v" "$repo:$v-cli"
+	docker tag "$repo:$v" "$repo:$v-cli"
 	docker build -t "$repo:$v-apache" "$v/apache"
 	docker build -t "$repo:$v-fpm" "$v/fpm"
 	if [ "$v" = "$latest" ]; then
-		docker tag -f "$repo:$v" "$repo"
-		docker tag -f "$repo:$v-cli" "$repo:cli"
-		docker tag -f "$repo:$v-apache" "$repo:apache"
-		docker tag -f "$repo:$v-fpm" "$repo:fpm"
+		docker tag "$repo:$v" "$repo"
+		docker tag "$repo:$v-cli" "$repo:cli"
+		docker tag "$repo:$v-apache" "$repo:apache"
+		docker tag "$repo:$v-fpm" "$repo:fpm"
 	fi
 done
 ''' + multiarch.templatePush(meta))

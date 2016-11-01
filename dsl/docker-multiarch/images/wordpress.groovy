@@ -27,7 +27,7 @@ sed -i "s!^FROM !FROM $prefix/!" */Dockerfile
 
 docker build -t "$repo:apache" apache
 docker build -t "$repo:fpm" fpm
-docker tag -f "$repo:apache" "$repo"
+docker tag "$repo:apache" "$repo"
 ''' + multiarch.templatePush(meta))
 		}
 	}

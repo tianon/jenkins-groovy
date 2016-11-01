@@ -43,10 +43,10 @@ for variant in */; do
 	variant="${variant%/}"
 	docker build -t "$repo:$variant" "$variant"
 	version="$(awk '$1 == "ENV" && $2 == "IRSSI_VERSION" { print $3; exit }' "$variant/Dockerfile")"
-	docker tag -f "$repo:$variant" "$repo:$version-$variant"
+	docker tag "$repo:$variant" "$repo:$version-$variant"
 	if [ "$variant" = "$latest" ]; then
-		docker tag -f "$repo:$variant" "$repo"
-		docker tag -f "$repo:$version-$variant" "$repo:$version"
+		docker tag "$repo:$variant" "$repo"
+		docker tag "$repo:$version-$variant" "$repo:$version"
 	fi
 done
 ''' + multiarch.templatePush(meta))

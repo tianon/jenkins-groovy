@@ -49,9 +49,9 @@ for v in */; do
 		&& docker build -t "$repo:$v-scm" "$v/scm" \\
 		&& docker build -t "$repo:$v" "$v"; then
 		if [ "$v" = "$latest" ]; then
-			docker tag -f "$repo:$v-curl" "$repo:curl"
-			docker tag -f "$repo:$v-scm" "$repo:scm"
-			docker tag -f "$repo:$v" "$repo"
+			docker tag "$repo:$v-curl" "$repo:curl"
+			docker tag "$repo:$v-scm" "$repo:scm"
+			docker tag "$repo:$v" "$repo"
 		fi
 	else
 		echo >&2 "Failed to build some part of $v; moving on."

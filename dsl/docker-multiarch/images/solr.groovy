@@ -33,7 +33,7 @@ for v in */; do
 	v="${v%/}"
 	docker build -t "$repo:$v" "$v"
 	if [ "$v" = "$latest" ]; then
-		docker tag -f "$repo:$v" "$repo"
+		docker tag "$repo:$v" "$repo"
 	fi
 done
 ''' + multiarch.templatePush(meta))

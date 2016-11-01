@@ -54,13 +54,13 @@ for f in */; do
 	if [ "$minor" -lt 20 ]; then continue; fi
 	v="$major.$minor.$patch$suff"
 	docker build -t "$repo:$v" "$f"
-	docker tag -f "$repo:$v" "$repo:$major.$minor$suff"
+	docker tag "$repo:$v" "$repo:$major.$minor$suff"
 	if [ "$f" = "$latest" ]; then
-		docker tag -f "$repo:$v" "$repo:$major"
-		docker tag -f "$repo:$v" "$repo"
+		docker tag "$repo:$v" "$repo:$major"
+		docker tag "$repo:$v" "$repo"
 	elif [ "$var" -a "$f" = "$latest,$var" ]; then
-		docker tag -f "$repo:$v" "$repo:$major$suff"
-		docker tag -f "$repo:$v" "$repo:$var"
+		docker tag "$repo:$v" "$repo:$major$suff"
+		docker tag "$repo:$v" "$repo:$var"
 	fi
 done
 ''' + multiarch.templatePush(meta))

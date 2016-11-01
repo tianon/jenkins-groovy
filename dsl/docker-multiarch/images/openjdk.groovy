@@ -34,9 +34,9 @@ for v in */; do
 		echo >&2 "warning: building '$v' failed; skipping"
 		continue
 	fi
-	docker tag -f "$repo:$v" "$repo:openjdk-$v"
+	docker tag "$repo:$v" "$repo:openjdk-$v"
 	if [ "$v" = "$latest" ]; then
-		docker tag -f "$repo:$v" "$repo"
+		docker tag "$repo:$v" "$repo"
 	fi
 done
 ''' + multiarch.templatePush(meta))

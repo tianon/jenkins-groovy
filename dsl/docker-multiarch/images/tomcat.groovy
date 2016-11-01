@@ -34,10 +34,10 @@ for v in */; do
 		variant="$(basename "$variant")"
 		docker build -t "$repo:$v-$variant" "$v/$variant"
 		if [ "$v/$variant" = "$latestV" ]; then
-			docker tag -f "$repo:$v-$variant" "$repo:$v"
+			docker tag "$repo:$v-$variant" "$repo:$v"
 		fi
 		if [ "$v/$variant" = "$latest" ]; then
-			docker tag -f "$repo:$v-$variant" "$repo"
+			docker tag "$repo:$v-$variant" "$repo"
 		fi
 	done
 done

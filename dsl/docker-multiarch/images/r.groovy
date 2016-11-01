@@ -29,7 +29,7 @@ sed -i "s!^FROM !FROM $prefix/!" Dockerfile
 
 docker build -t "$repo" .
 version="$(awk '$1 == "ENV" && $2 == "R_BASE_VERSION" { print $3; exit }' Dockerfile)"
-docker tag -f "$repo" "$repo:$version"
+docker tag "$repo" "$repo:$version"
 ''' + multiarch.templatePush(meta))
 		}
 	}

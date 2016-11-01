@@ -120,7 +120,7 @@ def static templateArgs(meta, extra = [], std = ['prefix', 'image', 'repo']) {
 def static templatePush(meta) {
 	return '''
 IFS=$'\\n'
-pushImages=( $(docker images "$repo" | awk -F '  +' 'NR>1 { print $1 ":" $2 }') )
+pushImages=( $(docker images "$repo" | awk -F '  +' 'NR > 1 && $1 != "<none>" && $2 != "<none>" { print $1 ":" $2 }') )
 unset IFS
 
 pushFailed=

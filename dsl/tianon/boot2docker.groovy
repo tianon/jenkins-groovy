@@ -54,17 +54,9 @@ docker push boot2docker/boot2docker:latest
 docker push boot2docker/boot2docker:test
 docker tag boot2docker/boot2docker:test "boot2docker/boot2docker:$dockerVersion"
 docker push "boot2docker/boot2docker:$dockerVersion"
-
-# build "boot2docker-experimental.iso" from our new "boot2docker/boot2docker:test" image
-sed -ri 's!^FROM .*$!FROM boot2docker/boot2docker:test!' Dockerfile.experimental
 ''',
 	],
 ]
-
-def experimentalShell = '''
-docker build -t boot2docker/boot2docker:experimental -f Dockerfile.experimental .
-docker run --rm boot2docker/boot2docker:experimental > boot2docker-experimental.iso
-'''
 
 for (releaseType in releaseTypes) {
 	freeStyleJob(releaseType.key) {
@@ -87,7 +79,7 @@ for (releaseType in releaseTypes) {
 		}
 		wrappers { colorizeOutput() }
 		steps {
-			shell(releaseType.value['shell'] + experimentalShell)
+			shell(releaseType.value['shell'])
 		}
 		publishers {
 			archiveArtifacts {

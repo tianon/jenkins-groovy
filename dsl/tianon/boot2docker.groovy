@@ -43,7 +43,7 @@ RUN set -x \\
 
 RUN { echo; echo "  WARNING: this is a build from test.docker.com, not a stable release."; echo; } >> "\\$ROOTFS/etc/motd"
 
-RUN /make_iso.sh
+RUN /tmp/make_iso.sh
 EOD
 
 docker build -t boot2docker/boot2docker --pull .

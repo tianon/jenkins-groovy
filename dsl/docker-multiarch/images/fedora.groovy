@@ -47,7 +47,8 @@ for v in "${versions[@]}"; do
 		[ -n "$tarballLinks" ] || continue
 
 		tarballLink="$(echo "$tarballLinks" | head -n1)"
-		tarballName="$(echo "$tarballLink" | sed 's/^<a href="|">$//g')"
+		tarballName="${tarballLink#'<a href="'}"
+		tarballName="${tarballName%'">'}"
 
 		curl -fSL "$urlBase/$tarballName" -o "tmp/$v/save.tar.xz" || continue
 

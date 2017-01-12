@@ -38,7 +38,7 @@ for v in "${versions[@]}"; do
 		"https://dl.fedoraproject.org/pub/fedora-secondary/releases/$v/Docker/$rhArch/images" \\
 		"https://dl.fedoraproject.org/pub/fedora/linux/releases/$v/Docker/$rhArch" \\
 	; do
-		rm -r "tmp/$v"; mkdir "tmp/$v"
+		rm -rf "tmp/$v"; mkdir -p "tmp/$v"
 
 		curl -fsSL "$urlBase/?C=M;O=D" -o "tmp/$v/html" || continue
 

@@ -70,7 +70,7 @@ for v in "${versions[@]}"; do
 		fi
 	done
 done
-''' /* TODO + multiarch.templatePush(meta)*/)
+''' + multiarch.templatePush(meta))
 		}
 	}
 }

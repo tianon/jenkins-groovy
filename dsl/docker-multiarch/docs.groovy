@@ -7,6 +7,7 @@ def images = [
 	'debian',
 	'drupal',
 	'erlang',
+	'fedora',
 	'gcc',
 	'haproxy',
 	'hello-world',

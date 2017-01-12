@@ -68,6 +68,21 @@ def static gnuArch(arch) {
 	], arch, 'UNKNOWN')
 }
 
+def static rhArch(arch) {
+	// https://dl.fedoraproject.org/pub/fedora/linux/releases/25/Docker/
+	// https://dl.fedoraproject.org/pub/fedora-secondary/releases/25/Docker/
+	// https://fedoraproject.org/wiki/Architectures
+	return optional([
+		'amd64': 'x86_64',
+		'arm64': 'aarch64',
+		'armhf': 'armhfp', // ARMv7+
+		'ppc64le': 'ppc64le',
+		//'armel': 'armsfp', // ARMv5+; not supported for Docker
+		//'i386': 'x86', // not supported for Docker
+		//'s390x': 's390x', // not supported for Docker (yet?)
+	], arch, null)
+}
+
 def static archBits(arch) {
 	return optional([
 		'arm64': '64',
@@ -93,6 +108,7 @@ def static meta(cls, arch) {
 		'dpkgArch': dpkgArch(arch),
 		'apkArch': apkArch(arch),
 		'gnuArch': gnuArch(arch),
+		'rhArch': rhArch(arch),
 		'archBits': archBits(arch),
 	]
 	// thanks to new s390x node, no longer necessary!

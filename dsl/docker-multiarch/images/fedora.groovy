@@ -59,6 +59,7 @@ for v in "${versions[@]}"; do
 			'*/layer.tar' \\
 			|| continue
 		[ -f "tmp/$v/layer.tar" ] || continue
+		rm "tmp/$v/save.tar.xz"
 
 		tee "tmp/$v/Dockerfile" <<-'EOD'
 			FROM scratch

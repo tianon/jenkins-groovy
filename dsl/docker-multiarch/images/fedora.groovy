@@ -60,7 +60,10 @@ for v in "${versions[@]}"; do
 			|| continue
 		[ -f "tmp/$v/layer.tar" ] || continue
 
-		{ echo 'FROM scratch'; echo 'ADD layer.tar /'; } > "tmp/$v/Dockerfile"
+		tee "tmp/$v/Dockerfile" <<-'EOD'
+			FROM scratch
+			ADD layer.tar /
+		EOD
 		docker build -t "$repo:$v" "tmp/$v"
 		if [ "$v" = "$latest" ]; then
 			docker tag "$repo:$v" "$repo"

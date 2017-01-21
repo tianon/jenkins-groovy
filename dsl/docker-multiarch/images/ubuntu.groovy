@@ -40,6 +40,9 @@ echo "$repo" > repo
 latest="$(< latest)"
 for v in */; do
 	v="${v%/}"
+	if [ ! -f "$v/Dockerfile" ]; then
+		continue
+	fi
 	pushImages+=( "$repo:$v" )
 	serial="$(awk -F '=' '$1 == "SERIAL" { print $2; exit }' "$v/build-info.txt")"
 	if [ "$serial" ]; then

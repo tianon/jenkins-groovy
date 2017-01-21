@@ -1,5 +1,6 @@
 freeStyleJob('tianon-debian-security-mirror') {
 	logRotator { daysToKeep(30) }
+	concurrentBuild(false)
 	label('tianon-nameless')
 	scm {
 		git {

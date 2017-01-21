@@ -1,5 +1,6 @@
 freeStyleJob('tianon-vim-docker') {
 	logRotator { numToKeep(5) }
+	concurrentBuild(false)
 	label('tianon-nameless')
 	scm {
 		git {

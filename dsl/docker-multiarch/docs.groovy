@@ -37,6 +37,7 @@ for (arch in multiarch.allArches()) {
 
 	freeStyleJob(meta.name) {
 		logRotator { daysToKeep(30) }
+		concurrentBuild(false)
 		label(meta.label)
 		scm {
 			git {

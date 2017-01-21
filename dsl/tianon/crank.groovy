@@ -1,6 +1,7 @@
 freeStyleJob('tianon-crank') {
 	disabled()
 	logRotator { daysToKeep(30) }
+	concurrentBuild(false)
 	label('tianon-nameless')
 	scm {
 		git {

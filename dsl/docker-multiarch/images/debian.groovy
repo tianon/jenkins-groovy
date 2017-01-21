@@ -48,6 +48,7 @@ for (arch in multiarch.allArches()) {
 	matrixJob(meta.name) {
 		description(meta.description)
 		logRotator { daysToKeep(30) }
+		concurrentBuild(false)
 		label(meta.label)
 		scm {
 			git {

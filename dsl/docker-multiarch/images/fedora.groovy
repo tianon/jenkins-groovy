@@ -10,6 +10,7 @@ for (arch in multiarch.allArches()) {
 	freeStyleJob(meta.name) {
 		description(meta.description)
 		logRotator { daysToKeep(30) }
+		concurrentBuild(false)
 		label(meta.label)
 		triggers {
 			cron('H H * * H')

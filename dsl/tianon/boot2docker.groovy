@@ -62,6 +62,7 @@ for (releaseType in releaseTypes) {
 	freeStyleJob(releaseType.key) {
 		description(releaseType.value['description'])
 		logRotator { numToKeep(5) }
+		concurrentBuild(false)
 		label('tianon-nameless')
 		scm {
 			git {

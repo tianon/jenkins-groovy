@@ -2,6 +2,7 @@ import vars.multiarch
 
 matrixJob('docker-multiarch-clean') {
 	logRotator { daysToKeep(30) }
+	concurrentBuild(false)
 	label('master')
 	triggers {
 		cron('H H/12 * * *')

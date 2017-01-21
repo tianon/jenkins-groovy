@@ -23,6 +23,7 @@ def firehose = [
 images.each { repo, suites ->
 	matrixJob('tianon-audit-' + repo) {
 		logRotator { daysToKeep(30) }
+		concurrentBuild(false)
 		label('tianon')
 		triggers {
 			cron('H H/12 * * *')

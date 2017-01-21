@@ -1,5 +1,6 @@
 matrixJob('tianon-apt-cacher-maint') {
 	logRotator { numToKeep(5) }
+	concurrentBuild(false)
 	label('tianon-nameless')
 	triggers {
 		cron('H H * * *')

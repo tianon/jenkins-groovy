@@ -1,5 +1,6 @@
 freeStyleJob('official-images-diff') {
 	logRotator { daysToKeep(30) }
+	concurrentBuild(false)
 	label('infosiftr')
 	scm {
 		git {

@@ -36,6 +36,24 @@ git ls-files --others --directory '*/' \\
 echo "$dpkgArch" > arch
 echo "$repo" > repo
 ./update.sh
+
+latest="$(< latest)"
+for v in */; do
+	v="${v%/}"
+	pushImages+=( "$repo:$v" )
+	serial="$(awk -F '=' '$1 == "SERIAL" { print $2; exit }' "$v/build-info.txt")"
+	if [ "$serial" ]; then
+		pushImages+=( "$repo:$v-$serial" )
+	fi
+	if [ -s "$v/alias" ]; then
+		for a in $(< "$v/alias"); do
+			pushImages+=( "$repo:$a" )
+		done
+	fi
+	if [ "$v" = 'latest' ]; then
+		pushImages+=( "$repo:latest" )
+	fi
+done
 ''' + multiarch.templatePush(meta))
 		}
 	}

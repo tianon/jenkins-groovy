@@ -130,13 +130,16 @@ def static templateArgs(meta, extra = [], std = ['prefix', 'image', 'repo']) {
 			str += "${ex}='${meta[ex]}'\n"
 		}
 	}
+	str += 'pushImages=()\n'
 	return str
 }
 def static templatePush(meta) {
 	return '''
-IFS=$'\\n'
-pushImages=( $(docker images "$repo" | awk -F '  +' 'NR > 1 && $1 != "<none>" && $2 != "<none>" { print $1 ":" $2 }') )
-unset IFS
+if [ "${#pushImages[@]}" -eq 0 ]; then
+	IFS=$'\\n'
+	pushImages=( $(docker images "$repo" | awk -F '  +' 'NR > 1 && $1 != "<none>" && $2 != "<none>" { print $1 ":" $2 }') )
+	unset IFS
+fi
 
 pushFailed=
 for pushImage in "${pushImages[@]}"; do

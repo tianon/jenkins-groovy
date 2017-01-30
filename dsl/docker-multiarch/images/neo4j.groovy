@@ -18,7 +18,7 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
-			upstream("docker-${arch}-openjdk", 'UNSTABLE')
+			//upstream("docker-${arch}-openjdk", 'UNSTABLE')
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }

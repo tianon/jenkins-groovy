@@ -19,6 +19,7 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
+			/*
 			upstreams = []
 			if (meta.apkArch) {
 				upstreams += "docker-${arch}-alpine"
@@ -31,6 +32,7 @@ for (arch in multiarch.allArches()) {
 				upstreams += "docker-${arch}-debian"
 			}
 			upstream(upstreams.join(', '), 'UNSTABLE')
+			*/
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }

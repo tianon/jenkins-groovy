@@ -18,7 +18,7 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
-			upstream("docker-${arch}-debian, docker-${arch}-ubuntu", 'UNSTABLE')
+			//upstream("docker-${arch}-debian, docker-${arch}-ubuntu", 'UNSTABLE')
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }

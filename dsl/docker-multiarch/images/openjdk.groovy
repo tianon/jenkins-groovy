@@ -18,7 +18,7 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
-			upstream("docker-${arch}-buildpack", 'UNSTABLE')
+			//upstream("docker-${arch}-buildpack", 'UNSTABLE')
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }

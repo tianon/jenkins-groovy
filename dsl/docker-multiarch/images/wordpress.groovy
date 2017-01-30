@@ -18,7 +18,7 @@ for (arch in multiarch.allArches()) {
 			}
 		}
 		triggers {
-			upstream("docker-${arch}-php", 'UNSTABLE')
+			//upstream("docker-${arch}-php", 'UNSTABLE')
 			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }

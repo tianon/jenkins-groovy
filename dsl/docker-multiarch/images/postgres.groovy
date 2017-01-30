@@ -33,11 +33,6 @@ sed -i "s!/configure !/configure --build='$gnuArch' !g" */{,*/}Dockerfile
 (
 	set +x
 
-	if ! wget --quiet --spider "http://apt.postgresql.org/pub/repos/apt/dists/jessie-pgdg/main/binary-$dpkgArch/Packages"; then
-		echo >&2 "warning, upstream doesn't support '$dpkgArch'; skipping Debian variants"
-		rm */Dockerfile
-	fi
-
 	for df in */{,*/}Dockerfile; do
 		dir="$(dirname "$df")"
 		from="$(awk '$1 == "FROM" { print $2; exit }' "$df")"
@@ -46,6 +41,11 @@ sed -i "s!/configure !/configure --build='$gnuArch' !g" */{,*/}Dockerfile
 			rm -f "$df"
 		fi
 	done
+
+	if ! wget --quiet --spider "http://apt.postgresql.org/pub/repos/apt/dists/jessie-pgdg/main/binary-$dpkgArch/Packages"; then
+		echo >&2 "warning, upstream doesn't support '$dpkgArch'; skipping Debian variants"
+		rm -f */Dockerfile
+	fi
 )
 
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"

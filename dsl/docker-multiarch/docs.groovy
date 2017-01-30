@@ -20,6 +20,7 @@ def images = [
 	'openjdk',
 	'perl',
 	'php',
+	'postgres',
 	'pypy',
 	'python',
 	'r-base',

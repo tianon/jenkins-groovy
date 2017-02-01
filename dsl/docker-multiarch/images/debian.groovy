@@ -58,6 +58,11 @@ for (arch in multiarch.allArches()) {
 					refspec('+refs/heads/master:refs/remotes/origin/master')
 				}
 				branches('*/master')
+				extensions {
+					cloneOptions {
+						honorRefspec()
+					}
+				}
 			}
 		}
 		triggers {

@@ -43,14 +43,16 @@ latest='18' # TODO discover this automatically somehow
 
 for v in */; do
 	v="${v%/}"
-	docker build -t "$repo:$v" "$v"
-	docker build -t "$repo:$v-onbuild" "$v/onbuild"
-	docker build -t "$repo:$v-slim" "$v/slim"
-	if [ "$v" = "$latest" ]; then
-		docker tag "$repo:$v" "$repo"
-		docker tag "$repo:$v-onbuild" "$repo:onbuild"
-		docker tag "$repo:$v-slim" "$repo:slim"
-	fi
+	for variant in '' onbuild slim; do
+		if [ -f "$v/$variant/Dockerfile" ]; then
+			docker build -t "$repo:$v${variant:+-$variant}" "$v/$variant"
+			pushImages+=( "$repo:$v${variant:+-$variant}" )
+			if [ "$v" = "$latest" ]; then
+				docker tag "$repo:$v${variant:+-$variant}" "$repo${variant:+:$variant}"
+				pushImages+=( "$repo${variant:+:$variant}" )
+			fi
+		fi
+	done
 done
 ''' + multiarch.templatePush(meta))
 		}

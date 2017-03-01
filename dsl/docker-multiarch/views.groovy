@@ -18,6 +18,7 @@ def images = [
 	'neo4j',
 	'node',
 	'openjdk',
+	'opensuse',
 	'perl',
 	'php',
 	'postgres',

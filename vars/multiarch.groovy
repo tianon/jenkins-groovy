@@ -131,6 +131,7 @@ def static templateArgs(meta, extra = [], std = ['prefix', 'image', 'repo']) {
 		}
 	}
 	str += 'pushImages=()\n'
+	str += 'docker version > /dev/null # test whether Docker is even working at all before anything more expensive happens\n'
 	return str
 }
 def static templatePush(meta) {

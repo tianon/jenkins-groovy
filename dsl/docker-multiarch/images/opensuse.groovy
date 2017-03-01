@@ -60,6 +60,10 @@ for v in "${versions[@]}"; do
 
 		tag="$repo:${v,,}"
 		docker build -t "$tag" "tmp/$v"
+		if ! docker run --rm "$tag" true; then
+			echo >&2 "warning: '$tag' built successfully, but failed to run!"
+			continue
+		fi
 		pushImages+=( "$tag" )
 		if [ "$v" = "$latest" ]; then
 			docker tag "$tag" "$repo:latest"
@@ -67,6 +71,11 @@ for v in "${versions[@]}"; do
 		fi
 	done
 done
+
+if [ "${#pushImages[@]}" -eq 0 ]; then
+	echo >&2 'error: nothing to push!'
+	exit 1
+fi
 ''' + multiarch.templatePush(meta))
 		}
 	}

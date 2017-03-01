@@ -57,9 +57,13 @@ for v in "${versions[@]}"; do
 			FROM scratch
 			ADD rootfs.tar.xz /
 		EOD
-		docker build -t "$repo:${v,,}" "tmp/$v"
+
+		tag="repo:${v,,}"
+		docker build -t "$tag" "tmp/$v"
+		pushImages+=( "$tag" )
 		if [ "$v" = "$latest" ]; then
-			docker tag "$repo:${v,,}" "$repo"
+			docker tag "$tag" "$repo:latest"
+			pushImages+=( "$repo:latest" )
 		fi
 	done
 done

@@ -58,7 +58,7 @@ for v in "${versions[@]}"; do
 			ADD rootfs.tar.xz /
 		EOD
 
-		tag="repo:${v,,}"
+		tag="$repo:${v,,}"
 		docker build -t "$tag" "tmp/$v"
 		pushImages+=( "$tag" )
 		if [ "$v" = "$latest" ]; then

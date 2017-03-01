@@ -25,8 +25,8 @@ for (arch in multiarch.allArches()) {
 		concurrentBuild(false)
 		label(meta.label)
 		triggers {
-			//cron('H H * * H')
-			//scm('H H/6 * * *')
+			cron('H H * * H')
+			scm('H H/6 * * *')
 		}
 		wrappers { colorizeOutput() }
 		steps {

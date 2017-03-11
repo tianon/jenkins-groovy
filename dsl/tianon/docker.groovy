@@ -21,15 +21,14 @@ freeStyleJob('tianon-docker-master') {
 	wrappers { colorizeOutput() }
 	steps {
 		shell("""\
-cd docker
+cd docker-master
 
 ./update.sh
 
-./build.sh
+docker build --pull .
 
-git commit -m 'Run docker/update.sh' -- . || true
-
-./push.sh
+git add . || true
+git commit -m 'Run docker-master/update.sh' || true
 """)
 	}
 	publishers {

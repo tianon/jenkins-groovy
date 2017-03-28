@@ -1,6 +1,8 @@
-def releaseTypes = [
-	'tianon-boot2docker-ga': [
-		'description': 'Builds an official release-ready ISO of <a href="https://github.com/boot2docker/boot2docker/blob/master/VERSION">https://github.com/boot2docker/boot2docker/blob/master/VERSION</a>',
+def releaseTypes = [:]
+for (branch in ['master', '17.03.x']) {
+	releaseTypes['tianon-boot2docker-ga-' + branch] = [
+		'branch': branch,
+		'description': 'Builds an official release-ready ISO of <a href="https://github.com/boot2docker/boot2docker/blob/' + branch + '/VERSION">https://github.com/boot2docker/boot2docker/blob/' + branch + '/VERSION</a>',
 		'shell': '''\
 git-set-mtimes
 
@@ -15,12 +17,14 @@ docker push boot2docker/boot2docker:latest
 docker tag boot2docker/boot2docker:latest "boot2docker/boot2docker:$dockerVersion"
 docker push "boot2docker/boot2docker:$dockerVersion"
 ''',
-	],
-	'tianon-boot2docker-rc': [
+	]
+	releaseTypes['tianon-boot2docker-rc-' + branch] = [
+		'branch': branch,
 		'description': 'Builds an official RC-ready ISO of <a href="http://test.docker.com.s3.amazonaws.com/latest">http://test.docker.com.s3.amazonaws.com/latest</a>',
 		'shell': '''\
 git-set-mtimes
 
+# TODO fix this to actually work the way I need it to for these non-master branches :(
 dockerVersion="$(curl -fsSL 'http://test.docker.com.s3.amazonaws.com/latest')"
 testDockerSha256="$(curl -fsSL "http://test.docker.com.s3.amazonaws.com/builds/Linux/x86_64/docker-${dockerVersion}.tgz.sha256" | cut -d' ' -f1)"
 
@@ -55,8 +59,8 @@ docker push boot2docker/boot2docker:test
 docker tag boot2docker/boot2docker:test "boot2docker/boot2docker:$dockerVersion"
 docker push "boot2docker/boot2docker:$dockerVersion"
 ''',
-	],
-]
+	]
+}
 
 for (releaseType in releaseTypes) {
 	freeStyleJob(releaseType.key) {
@@ -69,7 +73,7 @@ for (releaseType in releaseTypes) {
 				remote {
 					url('https://github.com/boot2docker/boot2docker.git')
 				}
-				branches('*/master')
+				branches('*/' + releaseType.value['branch'])
 				extensions {
 					cleanAfterCheckout()
 				}

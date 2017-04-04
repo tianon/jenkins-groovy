@@ -9,6 +9,7 @@ def images = [
 	'erlang',
 	'fedora',
 	'gcc',
+	'golang',
 	'haproxy',
 	'hello-world',
 	'httpd',

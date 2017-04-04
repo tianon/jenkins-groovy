@@ -40,7 +40,8 @@ case "$dpkgArch" in
 		;;
 esac
 
-sed -i "s!$fromArch!$toArch!g" */{,*/}Dockerfile
+sed -i "s!$fromArch!$toArch!g" */{,*/}Dockerfile update.sh
+./update.sh # update sha256s
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
 (

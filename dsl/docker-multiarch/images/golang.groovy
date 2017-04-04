@@ -44,31 +44,27 @@ sed -i "s!$fromArch!$toArch!g" */{,*/}Dockerfile update.sh
 ./update.sh # update sha256s
 sed -i "s!^FROM !FROM $prefix/!" */{,*/}Dockerfile
 
-(
-	for df in */{,*/}Dockerfile; do
-		dir="$(dirname "$df")"
-		from="$(awk -F '[[:space:]]+' '$1 == "FROM" { print $2; exit }' "$df")"
-		if ! docker inspect "$from" &> /dev/null; then
-			cat >&2 <<-EOF
-
-
-				warning: '$from' does not exist
-				    skipping $dir
-
-
-			EOF
-			echo >&2 "warning, '$from' does not exist; skipping $dir"
-			rm -r "$dir/"
-		fi
-	done
-)
-
 latest="$(./generate-stackbrew-library.sh | awk '$1 == "latest:" { print $3; exit }')"
 
 for df in */{,*/}Dockerfile; do
 	v="$(dirname "$df")"
 	if [[ "$v" == *onbuild* ]]; then
 		# onbuild needs to be built separately
+		continue
+	fi
+
+	from="$(awk -F '[[:space:]]+' '$1 == "FROM" { print $2; exit }' "$df")"
+	if ! docker inspect "$from" &> /dev/null; then
+		cat >&2 <<-EOF
+
+
+			warning: '$from' does not exist
+				skipping $v
+
+
+		EOF
+		echo >&2 "warning, '$from' does not exist; skipping $v"
+		rm -r "$v/"
 		continue
 	fi
 

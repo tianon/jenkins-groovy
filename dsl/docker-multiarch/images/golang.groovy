@@ -87,13 +87,23 @@ for df in */{,*/}Dockerfile; do
 	slash='/'
 	tag="${v//$slash/-}"
 	docker build -t "$repo:$tag" "$v"
+	pushImages+=( "$repo:$tag" )
 	docker tag "$repo:$tag" "$repo:$fullVersion"
-	[ "$v" = "$latest" ] && docker tag "$repo:$tag" "$repo"
+	pushImages+=( "$repo:$fullVersion" )
+	if [ "$v" = "$latest" ]; then
+		docker tag "$repo:$tag" "$repo:latest"
+		pushImages+=( "$repo:latest" )
+	fi
 
 	if [ -d "$v/onbuild" ]; then
 		docker build -t "$repo:$tag-onbuild" "$v/onbuild"
+		pushImages+=( "$repo:$tag-onbuild" )
 		docker tag "$repo:$tag-onbuild" "$repo:$fullVersion-onbuild"
-		[ "$v" = "$latest" ] && docker tag "$repo:$tag-onbuild" "$repo:onbuild"
+		pushImages+=( "$repo:$fullVersion-onbuild" )
+		if [ "$v" = "$latest" ]; then
+			docker tag "$repo:$tag-onbuild" "$repo:onbuild"
+			pushImages+=( "$repo:onbuild" )
+		fi
 	fi
 done
 ''' + multiarch.templatePush(meta))

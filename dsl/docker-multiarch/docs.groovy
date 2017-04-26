@@ -92,6 +92,9 @@ cat > .template-helpers/generate-dockerfile-links-partial.sh <<-'EOF'
 EOF
 rm -f */issues.md
 echo '[https://github.com/tianon/jenkins-groovy/issues](https://github.com/tianon/jenkins-groovy/issues)' > .template-helpers/issues.md
+for maint in */maintainer.md; do
+	ln -sfT ../.template-helpers/issues.md "$maint"
+done
 sed -ri "s!^docker pull !#&!; s!^(docker run --rm|docker images) !\\1 $prefix/!" hello-world/update.sh
 ./update.sh "${images[@]}"
 

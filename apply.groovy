@@ -18,6 +18,11 @@ freeStyleJob('apply-dsl') {
 	wrappers { colorizeOutput() }
 	steps {
 		dsl {
+			external('apply.groovy')
+			removeAction('DELETE')
+			removeViewAction('DELETE')
+		}
+		dsl {
 			external('dsl/**/*.groovy')
 			removeAction('DELETE')
 			removeViewAction('DELETE')

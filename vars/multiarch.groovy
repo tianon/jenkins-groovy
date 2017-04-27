@@ -1,5 +1,3 @@
-package vars
-
 def static allArches(blacklist = []) {
 	return [
 		'arm64',
@@ -159,3 +157,6 @@ done
 [ -z "$pushFailed" ]
 '''
 }
+
+// return "this" (for use via "load" in Jenkins pipeline, for example)
+this

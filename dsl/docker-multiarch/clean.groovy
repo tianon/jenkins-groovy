@@ -1,4 +1,4 @@
-import vars.multiarch
+def multiarch = (new GroovyShell()).evaluate(readFileFromWorkspace('vars/multiarch.groovy'))
 
 matrixJob('docker-multiarch-clean') {
 	logRotator { daysToKeep(30) }

@@ -26,7 +26,6 @@ freeStyleJob('apply-dsl') {
 			external('dsl/**/*.groovy')
 			removeAction('DELETE')
 			removeViewAction('DELETE')
-			sandbox(true)
 		}
 	}
 }

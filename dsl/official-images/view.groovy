@@ -1,20 +1,16 @@
-def myView(viewFunc, viewName, viewRegex) {
-	viewFunc(viewName) {
-		filterBuildQueue()
-		filterExecutors()
-		jobs {
-			regex(viewRegex)
-		}
-		columns {
-			status()
-			weather()
-			name()
-			lastDuration()
-			lastSuccess()
-			lastFailure()
-			buildButton()
-		}
+listView('official-images') {
+	filterBuildQueue()
+	filterExecutors()
+	jobs {
+		regex('official-images-.*')
+	}
+	columns {
+		status()
+		weather()
+		name()
+		lastDuration()
+		lastSuccess()
+		lastFailure()
+		buildButton()
 	}
 }
-
-myView(this.&listView, 'official-images', 'official-images-.*')

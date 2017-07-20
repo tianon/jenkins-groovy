@@ -42,9 +42,14 @@ diff -u \\
 		echo scratch
 
 		# deprecated and removed repos
+		echo celery
+		echo django
 		echo docker-dev
 		echo glassfish
 		echo hipache
+		echo iojs
+		echo java
+		echo rails
 		echo ubuntu-debootstrap
 		echo ubuntu-upstart
 	} | sort) \\

@@ -45,16 +45,19 @@ diff -u \\
 		echo celery
 		echo django
 		echo docker-dev
-		echo elasticsearch
 		echo glassfish
 		echo hipache
 		echo iojs
 		echo java
-		echo kibana
-		echo logstash
 		echo rails
 		echo ubuntu-debootstrap
 		echo ubuntu-upstart
+
+		# temporarily un-deprecated
+		# https://github.com/docker-library/docs/pull/1043
+		#echo elasticsearch
+		#echo kibana
+		#echo logstash
 	} | sort) \\
 	<(_all | sort)
 ''')

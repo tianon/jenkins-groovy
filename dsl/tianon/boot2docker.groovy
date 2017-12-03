@@ -23,6 +23,9 @@ docker push "boot2docker/boot2docker:$dockerVersion"
 for (releaseType in releaseTypes) {
 	freeStyleJob(releaseType.key) {
 		description(releaseType.value['description'])
+		authorization {
+			permission('hudson.model.Item.Read', 'anonymous')
+		}
 		logRotator { numToKeep(5) }
 		concurrentBuild(false)
 		label('tianon-nameless')

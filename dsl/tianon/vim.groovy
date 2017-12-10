@@ -11,7 +11,7 @@ freeStyleJob('tianon-vim-docker') {
 			}
 			remote {
 				url('git@github.com:tianon/vim-docker.git')
-				credentials('tianon')
+				credentials('ssh-tianon')
 				name('tianon')
 				refspec('+refs/heads/master:refs/remotes/tianon/master')
 			}

@@ -6,7 +6,7 @@ freeStyleJob('tianon-syncthing') {
 		git {
 			remote {
 				url('git@github.com:tianon/docker-syncthing.git')
-				credentials('tianon')
+				credentials('ssh-tianon')
 				name('origin')
 			}
 			branches('*/master')

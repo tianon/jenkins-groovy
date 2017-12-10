@@ -6,7 +6,7 @@ freeStyleJob('tianon-postgres-upgrade') {
 		git {
 			remote {
 				url('git@github.com:tianon/docker-postgres-upgrade.git')
-				credentials('tianon')
+				credentials('ssh-tianon')
 				name('origin')
 			}
 			branches('*/master')

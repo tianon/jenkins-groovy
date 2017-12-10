@@ -40,12 +40,6 @@ git push origin HEAD:master || true
 ./build.sh
 
 ./push.sh
-
-docker tag tianon/syncthing:cli tianon/syncthing-cli
-docker tag tianon/syncthing:inotify tianon/syncthing-inotify
-
-docker push tianon/syncthing-cli
-docker push tianon/syncthing-inotify
 """)
 	}
 }

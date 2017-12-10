@@ -1,7 +1,7 @@
 freeStyleJob('tianon-docker-master') {
 	logRotator { numToKeep(5) }
 	concurrentBuild(false)
-	label('tianon-nameless')
+	label('tianon-zoe')
 	scm {
 		git {
 			remote {

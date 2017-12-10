@@ -1,7 +1,7 @@
 freeStyleJob('tianon-debian-security-mirror') {
 	logRotator { daysToKeep(30) }
 	concurrentBuild(false)
-	label('tianon-nameless')
+	label('tianon-zoe')
 	scm {
 		git {
 			remote {

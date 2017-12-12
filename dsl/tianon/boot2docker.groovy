@@ -6,7 +6,7 @@ for (branch in ['master', '17.12.x', '17.09.x']) {
 		'shell': '''\
 git-set-mtimes
 
-dockerVersion="$(< VERSION)"
+dockerVersion="$(cat VERSION)"
 
 git log -1 > "version-GA-$dockerVersion"
 

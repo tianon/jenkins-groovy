@@ -10,12 +10,14 @@ dockerVersion="$(cat VERSION)"
 
 git log -1 > "version-GA-$dockerVersion"
 
-docker build -t boot2docker/boot2docker --pull .
-docker run --rm boot2docker/boot2docker > boot2docker.iso
+targetImage="boot2docker/boot2docker:$dockerVersion"
 
+docker build -t "$targetImage" --pull .
+docker run --rm "$targetImage" > boot2docker.iso
+
+docker push "$targetImage"
+docker tag "$targetImage" boot2docker/boot2docker:latest
 docker push boot2docker/boot2docker:latest
-docker tag boot2docker/boot2docker:latest "boot2docker/boot2docker:$dockerVersion"
-docker push "boot2docker/boot2docker:$dockerVersion"
 ''',
 	]
 }

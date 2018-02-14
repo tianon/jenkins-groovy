@@ -16,9 +16,10 @@ docker build -t "$targetImage" --pull .
 docker run --rm "$targetImage" > boot2docker.iso
 
 docker push "$targetImage"
+''' + (branch == 'master' ? '''
 docker tag "$targetImage" boot2docker/boot2docker:latest
 docker push boot2docker/boot2docker:latest
-''',
+''' : ''),
 	]
 }
 

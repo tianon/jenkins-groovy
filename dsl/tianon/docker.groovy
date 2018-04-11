@@ -6,7 +6,7 @@ freeStyleJob('tianon-docker-master') {
 		git {
 			remote {
 				url('git@github.com:tianon/dockerfiles.git')
-				credentials('ssh-tianon')
+				credentials('ssh-git')
 			}
 			branches('*/master')
 			extensions {

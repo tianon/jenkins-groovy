@@ -6,7 +6,7 @@ freeStyleJob('tianon-debian-security-mirror') {
 		git {
 			remote {
 				url('git@github.com:tianon/debian-security-tracker-mirror.git')
-				credentials('ssh-tianon')
+				credentials('ssh-git')
 			}
 			branches('*/master')
 			extensions {

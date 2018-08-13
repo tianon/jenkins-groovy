@@ -49,6 +49,7 @@ diff -u \\
 		echo hipache
 		echo iojs
 		echo java
+		echo jenkins
 		echo rails
 		echo ubuntu-debootstrap
 		echo ubuntu-upstart

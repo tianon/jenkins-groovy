@@ -6,7 +6,7 @@ for (branch in ['master', '18.06.x']) {
 		'shell': '''\
 git-set-mtimes
 
-dockerVersion="$(cat VERSION)"
+dockerVersion="$(cat VERSION 2>/dev/null || awk '$1 == "ENV" && $2 == "DOCKER_VERSION" { print $3 }' Dockerfile)"
 
 git log -1 > "version-GA-$dockerVersion"
 

@@ -19,6 +19,15 @@ docker push "$targetImage"
 ''' + (branch == 'master' ? '''
 docker tag "$targetImage" boot2docker/boot2docker:latest
 docker push boot2docker/boot2docker:latest
+
+docker run --rm boot2docker/boot2docker tar -cC /tmp/stats . | tar -xv
+{
+	echo '<hr /><pre>'
+	cat state.md
+	echo '</pre><hr /><pre>'
+	cat sums.md
+	echo '</pre><hr />'
+} > build-stats.html
 ''' : ''),
 	]
 }
@@ -55,6 +64,8 @@ for (releaseType in releaseTypes) {
 				fingerprint()
 				pattern('boot2docker*.iso')
 				pattern('version-*')
+				pattern('*.md')
+				pattern('*.html')
 			}
 		}
 	}

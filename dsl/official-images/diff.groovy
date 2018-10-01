@@ -50,6 +50,7 @@ diff -u \\
 		echo iojs
 		echo java
 		echo jenkins
+		echo piwik
 		echo rails
 		echo ubuntu-debootstrap
 		echo ubuntu-upstart

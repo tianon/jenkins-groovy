@@ -66,6 +66,7 @@ for (releaseType in releaseTypes) {
 				pattern('version-*')
 				pattern('*.md')
 				pattern('*.html')
+				exclude('README.md,FAQ.md')
 			}
 		}
 	}

@@ -15,11 +15,6 @@ targetImage="boot2docker/boot2docker:$dockerVersion"
 docker build -t "$targetImage" --pull .
 docker run --rm "$targetImage" > boot2docker.iso
 
-docker push "$targetImage"
-''' + (branch == 'master' ? '''
-docker tag "$targetImage" boot2docker/boot2docker:latest
-docker push boot2docker/boot2docker:latest
-
 docker run --rm boot2docker/boot2docker tar -cC /tmp/stats . | tar -xv
 {
 	echo '<hr /><pre>'
@@ -28,6 +23,11 @@ docker run --rm boot2docker/boot2docker tar -cC /tmp/stats . | tar -xv
 	cat sums.md
 	echo '</pre><hr />'
 } > build-stats.html
+
+docker push "$targetImage"
+''' + (branch == 'master' ? '''
+docker tag "$targetImage" boot2docker/boot2docker:latest
+docker push boot2docker/boot2docker:latest
 ''' : ''),
 	]
 }

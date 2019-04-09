@@ -46,10 +46,13 @@ diff -u \\
 		echo django
 		echo docker-dev
 		echo glassfish
+		echo hello-seattle
 		echo hipache
+		echo hola-mundo
 		echo iojs
 		echo java
 		echo jenkins
+		echo owncloud
 		echo piwik
 		echo rails
 		echo ubuntu-debootstrap

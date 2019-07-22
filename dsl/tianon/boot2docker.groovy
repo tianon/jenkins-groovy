@@ -1,5 +1,5 @@
 def releaseTypes = [:]
-for (branch in ['master', '18.09.x']) {
+for (branch in ['master', '19.03.x', '18.09.x']) {
 	releaseTypes['tianon-boot2docker-' + branch] = [
 		'branch': branch,
 		'description': 'Builds an official <a href="https://github.com/boot2docker/boot2docker/releases">release-ready</a> ISO of <a href="https://github.com/boot2docker/boot2docker/blob/' + branch + '/VERSION">https://github.com/boot2docker/boot2docker/blob/' + branch + '/VERSION</a>',

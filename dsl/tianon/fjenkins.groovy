@@ -21,23 +21,28 @@ freeStyleJob('tianon-jenkins') {
 	wrappers { colorizeOutput() }
 	steps {
 		shell('''\
-cd jenkins
-
+cd jenkins/weekly
 ./update.sh
-
-docker build --pull -t tianon/jenkins .
+docker build --pull -t tianon/jenkins:weekly .
 
 jenkinsVersion="$(awk '
 	$1 == "ENV" && $2 == "JENKINS_VERSION" {
 		print $3
 	}
 ' Dockerfile)"
+git commit -m "Update jenkins-weekly to $jenkinsVersion" -- Dockerfile || true
+''')
+		shell('''\
+cd jenkins/lts
+./update.sh
+docker build --pull -t tianon/jenkins:lts .
 
-git commit -m "Update jenkins to $jenkinsVersion" -- Dockerfile || true
-
-docker tag tianon/jenkins "tianon/jenkins:$jenkinsVersion"
-docker push "tianon/jenkins:$jenkinsVersion"
-docker push tianon/jenkins:latest
+jenkinsVersion="$(awk '
+	$1 == "ENV" && $2 == "JENKINS_VERSION" {
+		print $3
+	}
+' Dockerfile)"
+git commit -m "Update jenkins-lts to $jenkinsVersion" -- Dockerfile || true
 ''')
 	}
 	publishers {
